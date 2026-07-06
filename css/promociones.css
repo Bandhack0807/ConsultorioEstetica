@@ -1,0 +1,64 @@
+.promociones{
+
+    padding:60px;
+
+    text-align:center;
+}
+
+.promociones h1{
+
+    font-size:50px;
+
+    color:#333;
+}
+
+.cards{
+
+    margin-top:50px;
+
+    display:flex;
+    justify-content:center;
+    gap:30px;
+    flex-wrap:wrap;
+}
+
+.promo{
+
+    width:320px;
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:40px;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.2);
+
+    transition:.3s;
+}
+
+.promo:hover{
+
+    transform:translateY(-10px);
+}
+
+.promo h2{
+
+    color:#ff4fb8;
+
+    font-size:40px;
+}
+
+.promo h3{
+
+    margin-top:15px;
+
+    color:#333;
+}
+
+.promo p{
+
+    margin-top:15px;
+
+    color:#666;
+}

@@ -1,0 +1,60 @@
+.nosotros{
+
+    min-height:80vh;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    gap:70px;
+
+    padding:60px;
+}
+
+.texto-nosotros{
+
+    width:550px;
+}
+
+.texto-nosotros h1{
+
+    font-size:50px;
+    color:#333;
+}
+
+.texto-nosotros p{
+
+    margin-top:20px;
+
+    font-size:20px;
+    line-height:1.8;
+
+    color:#555;
+}
+
+.imagen-nosotros img{
+
+    width:500px;
+
+    border-radius:20px;
+
+    box-shadow:0 10px 20px rgba(0,0,0,.2);
+}
+
+@media(max-width:900px){
+
+    .nosotros{
+
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .texto-nosotros{
+        width:100%;
+    }
+
+    .imagen-nosotros img{
+        width:100%;
+    }
+
+}

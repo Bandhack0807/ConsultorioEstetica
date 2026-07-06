@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Agendar Consulta</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/consulta.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+<body>
+
+<header>
+
+<div class="logo">
+<img src="img/logo.png">
+</div>
+
+<nav>
+
+<a href="index.html">Inicio</a>
+<a href="nosotros.html">Nosotros</a>
+<a href="catalogo.html">Catálogo</a>
+<a href="promociones.html">Promociones</a>
+<a href="contacto.html">Contacto</a>
+<a href="login.html">Admin</a>
+
+</nav>
+
+</header>
+
+<section class="consulta">
+
+<div class="contenedor">
+
+<h1>Agendar Consulta</h1>
+
+<div class="lineas">
+<div></div>
+<div></div>
+<div></div>
+</div>
+
+<form id="formConsulta">
+
+<input
+type="text"
+id="nombre"
+placeholder="Nombre Completo"
+required>
+
+<input
+type="text"
+id="telefono"
+placeholder="Teléfono"
+required>
+
+<input
+type="email"
+id="correo"
+placeholder="Correo Electrónico"
+required>
+
+<select id="tratamiento">
+
+<option>Botox</option>
+<option>Limpieza Facial</option>
+<option>Peeling</option>
+<option>Radiofrecuencia</option>
+
+</select>
+
+<input
+type="date"
+id="fecha"
+required>
+
+<select id="hora">
+
+<option>10:00 AM</option>
+<option>11:00 AM</option>
+<option>12:00 PM</option>
+<option>01:00 PM</option>
+
+</select>
+
+<textarea
+id="mensaje"
+placeholder="Mensaje adicional">
+</textarea>
+
+<button type="submit">
+
+Enviar Solicitud
+
+</button>
+
+</form>
+
+</div>
+
+</section>
+
+<script src="js/consulta.js"></script>
+
+</body>
+</html>

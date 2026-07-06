@@ -1,0 +1,75 @@
+.consulta{
+
+    min-height:80vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:50px;
+}
+
+.contenedor{
+
+    width:700px;
+
+    background:white;
+
+    padding:50px;
+
+    border-radius:25px;
+
+    box-shadow:0 5px 20px rgba(0,0,0,.15);
+}
+
+.contenedor h1{
+
+    text-align:center;
+
+    font-size:45px;
+
+    color:#333;
+}
+
+#formConsulta{
+
+    display:flex;
+    flex-direction:column;
+
+    gap:20px;
+}
+
+#formConsulta input,
+#formConsulta select,
+#formConsulta textarea{
+
+    padding:15px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    font-size:16px;
+}
+
+#formConsulta textarea{
+
+    height:140px;
+}
+
+#formConsulta button{
+
+    background:#ff4fb8;
+
+    color:white;
+
+    border:none;
+
+    padding:18px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:18px;
+}
