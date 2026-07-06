@@ -1,8 +1,9 @@
 .promociones{
 
-    padding:60px;
+    padding:70px 60px;
 
     text-align:center;
+
 }
 
 .promociones h1{
@@ -10,6 +11,17 @@
     font-size:50px;
 
     color:#333;
+
+}
+
+.subtitulo{
+
+    color:#666;
+
+    margin-top:20px;
+
+    font-size:18px;
+
 }
 
 .cards{
@@ -17,48 +29,177 @@
     margin-top:50px;
 
     display:flex;
+
     justify-content:center;
-    gap:30px;
+
     flex-wrap:wrap;
+
+    gap:35px;
+
 }
 
 .promo{
 
-    width:320px;
+    width:330px;
 
     background:white;
 
     border-radius:20px;
 
-    padding:40px;
+    overflow:hidden;
 
-    box-shadow:0 5px 15px rgba(0,0,0,.2);
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
 
-    transition:.3s;
+    transition:.4s;
+
+    position:relative;
+
 }
 
 .promo:hover{
 
     transform:translateY(-10px);
+
+    box-shadow:0 15px 35px rgba(0,0,0,.25);
+
 }
 
-.promo h2{
+.etiqueta{
 
-    color:#ff4fb8;
+    position:absolute;
 
-    font-size:40px;
+    top:15px;
+
+    left:15px;
+
+    background:#ff4fb8;
+
+    color:white;
+
+    padding:8px 15px;
+
+    border-radius:20px;
+
+    font-weight:bold;
+
+    font-size:14px;
+
+}
+
+.promo img{
+
+    width:100%;
+
+    height:230px;
+
+    object-fit:cover;
+
 }
 
 .promo h3{
 
-    margin-top:15px;
+    margin-top:20px;
 
     color:#333;
+
+    font-size:28px;
+
 }
 
 .promo p{
 
-    margin-top:15px;
+    margin:20px;
 
     color:#666;
+
+    line-height:1.6;
+
+}
+
+.precio{
+
+    margin-bottom:25px;
+
+}
+
+.antes{
+
+    text-decoration:line-through;
+
+    color:#999;
+
+    margin-right:10px;
+
+    font-size:18px;
+
+}
+
+.ahora{
+
+    color:#ff4fb8;
+
+    font-size:32px;
+
+    font-weight:bold;
+
+}
+
+.promo a{
+
+    display:inline-block;
+
+    margin-bottom:30px;
+
+    padding:12px 28px;
+
+    background:#e7ad3c;
+
+    color:white;
+
+    text-decoration:none;
+
+    border-radius:30px;
+
+    transition:.3s;
+
+    font-weight:bold;
+
+}
+
+.promo a:hover{
+
+    background:#ff4fb8;
+
+}
+
+@media(max-width:900px){
+
+.promociones{
+
+    padding:50px 20px;
+
+}
+
+.promociones h1{
+
+    font-size:38px;
+
+}
+
+.cards{
+
+    flex-direction:column;
+
+    align-items:center;
+
+}
+
+.promo{
+
+    width:100%;
+
+    max-width:380px;
+
+}
+
 }
