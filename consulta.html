@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 
 <meta charset="UTF-8">
@@ -14,12 +15,13 @@
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 </head>
+
 <body>
 
 <header>
 
 <div class="logo">
-<img src="img/logo.png">
+<img src="img/Logo DRA.Laura.jpg" alt="Logo">
 </div>
 
 <nav>
@@ -33,13 +35,27 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
 </nav>
 
+<div class="redes">
+
+<a href="https://www.facebook.com/DraLauGomez/photos" target="_blank">
+<i class="fab fa-facebook"></i>
+</a>
+
+<a href="https://www.instagram.com/dra.lau.gomez_med.estetica/" target="_blank">
+<i class="fab fa-instagram"></i>
+</a>
+
+<a href="https://wa.me/5217641098535" target="_blank">
+<i class="fab fa-whatsapp"></i>
+</a>
+
+</div>
+
 </header>
 
 <section class="consulta">
 
-<div class="contenedor">
-
-<h1>Agendar Consulta</h1>
+<h1>AGENDA TU CONSULTA</h1>
 
 <div class="lineas">
 <div></div>
@@ -52,11 +68,11 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 <input
 type="text"
 id="nombre"
-placeholder="Nombre Completo"
+placeholder="Nombre completo"
 required>
 
 <input
-type="text"
+type="tel"
 id="telefono"
 placeholder="Teléfono"
 required>
@@ -64,15 +80,26 @@ required>
 <input
 type="email"
 id="correo"
-placeholder="Correo Electrónico"
+placeholder="Correo electrónico"
 required>
 
-<select id="tratamiento">
+<select id="tratamiento" required>
+
+<option value="">
+Seleccione un tratamiento
+</option>
+
+<option>Limpieza Facial</option>
 
 <option>Botox</option>
-<option>Limpieza Facial</option>
+
 <option>Peeling</option>
+
 <option>Radiofrecuencia</option>
+
+<option>Ácido Hialurónico</option>
+
+<option>Consulta General</option>
 
 </select>
 
@@ -81,19 +108,14 @@ type="date"
 id="fecha"
 required>
 
-<select id="hora">
-
-<option>10:00 AM</option>
-<option>11:00 AM</option>
-<option>12:00 PM</option>
-<option>01:00 PM</option>
-
-</select>
+<input
+type="time"
+id="hora"
+required>
 
 <textarea
 id="mensaje"
-placeholder="Mensaje adicional">
-</textarea>
+placeholder="Mensaje adicional"></textarea>
 
 <button type="submit">
 
@@ -103,11 +125,120 @@ Enviar Solicitud
 
 </form>
 
-</div>
-
 </section>
 
-<script src="js/consulta.js"></script>
+<footer>
+
+<div>
+
+<h3>CONSULTORIO</h3>
+
+<p>Dra. Laura Gómez</p>
+
+</div>
+
+<div>
+
+<h3>SÍGUENOS</h3>
+
+<div class="footer-redes">
+
+<a href="https://www.facebook.com/DraLauGomez/photos" target="_blank">
+<i class="fab fa-facebook"></i>
+</a>
+
+<a href="https://www.instagram.com/dra.lau.gomez_med.estetica/" target="_blank">
+<i class="fab fa-instagram"></i>
+</a>
+
+<a href="https://wa.me/5217641098535" target="_blank">
+<i class="fab fa-whatsapp"></i>
+</a>
+
+</div>
+
+</div>
+
+<div>
+
+<p>© 2026 Consultorio de Medicina Estética Dra. Laura Gómez</p>
+
+<p>Todos los derechos reservados.</p>
+
+</div>
+
+</footer>
+
+<a
+class="whatsapp"
+href="https://wa.me/5217641098535"
+target="_blank">
+
+<i class="fab fa-whatsapp"></i>
+
+</a>
+
+<script>
+
+document
+.getElementById("formConsulta")
+.addEventListener("submit",function(e){
+
+e.preventDefault();
+
+let nombre=document.getElementById("nombre").value;
+
+let telefono=document.getElementById("telefono").value;
+
+let correo=document.getElementById("correo").value;
+
+let tratamiento=document.getElementById("tratamiento").value;
+
+let fecha=document.getElementById("fecha").value;
+
+let hora=document.getElementById("hora").value;
+
+let mensaje=document.getElementById("mensaje").value;
+
+let texto=
+
+`Hola Dra. Laura Gómez.
+
+Me gustaría agendar una consulta.
+
+Nombre:
+${nombre}
+
+Teléfono:
+${telefono}
+
+Correo:
+${correo}
+
+Tratamiento:
+${tratamiento}
+
+Fecha:
+${fecha}
+
+Hora:
+${hora}
+
+Mensaje:
+${mensaje}`;
+
+window.open(
+
+"https://wa.me/5217641098535?text="+encodeURIComponent(texto),
+
+"_blank"
+
+);
+
+});
+
+</script>
 
 </body>
+
 </html>

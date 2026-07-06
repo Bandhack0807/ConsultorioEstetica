@@ -1,75 +1,87 @@
 .consulta{
 
-    min-height:80vh;
+padding:60px;
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
+text-align:center;
 
-    padding:50px;
 }
 
-.contenedor{
+.consulta h1{
 
-    width:700px;
+font-size:45px;
 
-    background:white;
+color:#333;
 
-    padding:50px;
-
-    border-radius:25px;
-
-    box-shadow:0 5px 20px rgba(0,0,0,.15);
 }
 
-.contenedor h1{
+.consulta form{
 
-    text-align:center;
+margin:auto;
 
-    font-size:45px;
+margin-top:50px;
 
-    color:#333;
+max-width:650px;
+
+display:flex;
+
+flex-direction:column;
+
+gap:20px;
+
 }
 
-#formConsulta{
+.consulta input,
+.consulta select,
+.consulta textarea{
 
-    display:flex;
-    flex-direction:column;
+padding:18px;
 
-    gap:20px;
+border:none;
+
+border-radius:12px;
+
+font-size:17px;
+
+background:white;
+
+box-shadow:0 5px 12px rgba(0,0,0,.1);
+
 }
 
-#formConsulta input,
-#formConsulta select,
-#formConsulta textarea{
+.consulta textarea{
 
-    padding:15px;
+height:140px;
 
-    border:1px solid #ddd;
+resize:none;
 
-    border-radius:10px;
-
-    font-size:16px;
 }
 
-#formConsulta textarea{
+.consulta button{
 
-    height:140px;
+background:#ff4fb8;
+
+color:white;
+
+border:none;
+
+padding:18px;
+
+font-size:20px;
+
+font-weight:bold;
+
+border-radius:12px;
+
+cursor:pointer;
+
+transition:.3s;
+
 }
 
-#formConsulta button{
+.consulta button:hover{
 
-    background:#ff4fb8;
+background:#e83e9d;
 
-    color:white;
+transform:translateY(-3px);
 
-    border:none;
-
-    padding:18px;
-
-    border-radius:10px;
-
-    cursor:pointer;
-
-    font-size:18px;
 }

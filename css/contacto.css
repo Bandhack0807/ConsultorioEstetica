@@ -1,116 +1,89 @@
 .contacto{
 
-    padding:60px;
+padding:60px;
+
+text-align:center;
+
 }
 
 .contacto h1{
 
-    text-align:center;
+font-size:45px;
 
-    font-size:50px;
+color:#333;
 
-    color:#333;
 }
 
 .contenedor-contacto{
 
-    display:flex;
+margin-top:50px;
 
-    gap:50px;
+display:flex;
 
-    margin-top:50px;
+justify-content:space-between;
+
+align-items:flex-start;
+
+gap:40px;
+
+flex-wrap:wrap;
+
 }
 
-.info{
+.informacion{
 
-    flex:1;
+flex:1;
 
-    background:white;
+min-width:300px;
 
-    padding:40px;
+text-align:left;
 
-    border-radius:20px;
+background:white;
 
-    box-shadow:0 5px 15px rgba(0,0,0,.1);
+padding:35px;
+
+border-radius:20px;
+
+box-shadow:0 5px 15px rgba(0,0,0,.15);
+
 }
 
-.info p{
+.informacion h2{
 
-    margin-top:20px;
+margin-bottom:20px;
 
-    font-size:18px;
+color:#ff4fb8;
+
 }
 
-.formulario{
+.informacion p{
 
-    flex:1;
+margin:15px 0;
 
-    background:white;
+font-size:18px;
 
-    padding:40px;
+line-height:1.6;
 
-    border-radius:20px;
-
-    box-shadow:0 5px 15px rgba(0,0,0,.1);
-}
-
-.formulario form{
-
-    display:flex;
-    flex-direction:column;
-    gap:20px;
-}
-
-.formulario input,
-.formulario textarea{
-
-    padding:15px;
-
-    border:1px solid #ddd;
-
-    border-radius:10px;
-
-    font-size:16px;
-}
-
-.formulario textarea{
-
-    height:150px;
-}
-
-.formulario button{
-
-    background:#ff4fb8;
-
-    color:white;
-
-    border:none;
-
-    padding:15px;
-
-    border-radius:10px;
-
-    cursor:pointer;
-}
-
-.titulo-mapa{
-
-    margin-top:60px;
-
-    text-align:center;
 }
 
 .mapa{
 
-    margin-top:30px;
+flex:1;
+
+min-width:350px;
+
 }
 
 .mapa iframe{
 
-    width:100%;
-    height:450px;
+width:100%;
 
-    border:none;
+height:450px;
 
-    border-radius:20px;
+border:none;
+
+border-radius:20px;
+
+box-shadow:0 5px 15px rgba(0,0,0,.15);
+
 }
