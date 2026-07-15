@@ -1,10 +1,13 @@
 .catalogo{
 
-    padding:70px 60px;
+    padding:60px 20px;
 
     text-align:center;
 
+    min-height:800px;
+
 }
+
 
 .catalogo h1{
 
@@ -12,87 +15,153 @@
 
     color:#333;
 
-    margin-bottom:20px;
+    margin-bottom:10px;
 
 }
 
-.cards{
 
-    margin-top:50px;
+.catalogo .lineas{
+
+    width:150px;
+
+    margin:25px auto;
+
+}
+
+
+.descripcion-catalogo{
+
+    color:#666;
+
+    font-size:18px;
+
+    margin-bottom:45px;
+
+}
+
+
+/* CARRUSEL */
+
+.carrusel{
+
+    max-width:1050px;
+
+    margin:auto;
+
+    position:relative;
 
     display:flex;
 
     justify-content:center;
 
-    flex-wrap:wrap;
-
-    gap:35px;
+    align-items:center;
 
 }
 
-.card{
 
-    width:340px;
+/* TARJETA PRINCIPAL */
+
+.tratamiento{
+
+    width:850px;
 
     background:white;
 
-    border-radius:20px;
+    border-radius:25px;
 
     overflow:hidden;
 
-    box-shadow:0 10px 25px rgba(0,0,0,.15);
+    box-shadow:0 10px 30px rgba(0,0,0,.18);
 
     transition:.4s;
 
 }
 
-.card:hover{
 
-    transform:translateY(-12px);
+.tratamiento:hover{
 
-    box-shadow:0 18px 35px rgba(0,0,0,.25);
+    transform:translateY(-5px);
 
 }
 
-.card img{
+
+/* IMAGEN */
+
+.contenedor-imagen{
 
     width:100%;
 
-    height:250px;
+    height:480px;
+
+    overflow:hidden;
+
+}
+
+
+.contenedor-imagen img{
+
+    width:100%;
+
+    height:100%;
 
     object-fit:cover;
 
-}
-
-.contenido{
-
-    padding:25px;
+    transition:.5s;
 
 }
 
-.card h3{
+
+.tratamiento:hover img{
+
+    transform:scale(1.03);
+
+}
+
+
+/* INFORMACIÓN */
+
+.informacion-tratamiento{
+
+    padding:35px 60px 45px;
+
+}
+
+
+.informacion-tratamiento h2{
 
     color:#333;
 
-    margin-bottom:15px;
+    font-size:35px;
 
-    font-size:28px;
+    margin-bottom:20px;
 
 }
 
-.card p{
+
+.informacion-tratamiento p{
 
     color:#666;
 
+    font-size:18px;
+
     line-height:1.7;
 
-    margin-bottom:25px;
+    max-width:650px;
+
+    margin:0 auto 30px;
 
 }
 
-.btn-card{
 
-    display:inline-block;
+/* BOTÓN INFORMACIÓN */
+
+.btn-informacion{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:10px;
 
     background:#e7ad3c;
 
@@ -100,52 +169,247 @@
 
     text-decoration:none;
 
-    padding:12px 25px;
+    padding:15px 30px;
 
     border-radius:30px;
 
-    transition:.3s;
+    font-size:17px;
 
     font-weight:bold;
 
+    transition:.3s;
+
 }
 
-.btn-card:hover{
+
+.btn-informacion:hover{
 
     background:#ff4fb8;
 
+    transform:scale(1.05);
+
 }
+
+
+/* BOTONES CARRUSEL */
+
+.boton-carrusel{
+
+    position:absolute;
+
+    top:38%;
+
+    width:70px;
+
+    height:70px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#e7ad3c;
+
+    color:white;
+
+    font-size:30px;
+
+    cursor:pointer;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    transition:.3s;
+
+    z-index:10;
+
+}
+
+
+.boton-carrusel:hover{
+
+    background:#ff4fb8;
+
+    transform:scale(1.1);
+
+}
+
+
+.anterior{
+
+    left:20px;
+
+}
+
+
+.siguiente{
+
+    right:20px;
+
+}
+
+
+/* INDICADORES */
+
+.indicadores{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:12px;
+
+    margin-top:35px;
+
+}
+
+
+.indicador{
+
+    width:15px;
+
+    height:15px;
+
+    border-radius:50%;
+
+    background:#ccc;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+
+.indicador.activo{
+
+    background:#ff4fb8;
+
+    transform:scale(1.2);
+
+}
+
+
+/* ANIMACIÓN */
+
+.animacion{
+
+    animation:cambiarTratamiento .5s ease;
+
+}
+
+
+@keyframes cambiarTratamiento{
+
+    from{
+
+        opacity:0;
+
+        transform:translateX(30px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateX(0);
+
+    }
+
+}
+
 
 /* RESPONSIVE */
 
 @media(max-width:900px){
 
-.cards{
+    .catalogo h1{
 
-    flex-direction:column;
+        font-size:35px;
 
-    align-items:center;
+    }
+
+
+    .tratamiento{
+
+        width:90%;
+
+    }
+
+
+    .contenedor-imagen{
+
+        height:350px;
+
+    }
+
+
+    .informacion-tratamiento{
+
+        padding:30px;
+
+    }
+
+
+    .boton-carrusel{
+
+        width:55px;
+
+        height:55px;
+
+        font-size:22px;
+
+    }
+
+
+    .anterior{
+
+        left:0;
+
+    }
+
+
+    .siguiente{
+
+        right:0;
+
+    }
 
 }
 
-.catalogo{
 
-    padding:50px 20px;
+@media(max-width:600px){
 
-}
+    .contenedor-imagen{
 
-.catalogo h1{
+        height:260px;
 
-    font-size:38px;
+    }
 
-}
 
-.card{
+    .informacion-tratamiento h2{
 
-    width:100%;
+        font-size:28px;
 
-    max-width:380px;
+    }
 
-}
+
+    .informacion-tratamiento p{
+
+        font-size:16px;
+
+    }
+
+
+    .boton-carrusel{
+
+        width:45px;
+
+        height:45px;
+
+    }
 
 }

@@ -3,16 +3,19 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
 
-<title>Catálogo de Tratamientos</title>
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="css/catalogo.css">
+    <title>Catálogo</title>
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="css/catalogo.css">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 </head>
 
@@ -20,166 +23,220 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
 <header>
 
-<div class="logo">
-<img src="img/Logo DRA.Laura.jpg" alt="Logo">
-</div>
+    <div class="logo">
 
-<nav>
+        <img src="img/Logo DRA.Laura.jpg" alt="Logo Dra. Laura Gómez">
 
-<a href="index.html">Inicio</a>
-<a href="nosotros.html">Nosotros</a>
-<a href="catalogo.html">Catálogo</a>
-<a href="promociones.html">Promociones</a>
-<a href="contacto.html">Contacto</a>
-<a href="consulta.html">Consulta</a>
-<a href="login.html">Admin</a>
+    </div>
 
-</nav>
+    <nav>
 
-<div class="redes">
+        <a href="index.html">Inicio</a>
 
-<a href="https://www.facebook.com/DraLauGomez/photos" target="_blank">
-<i class="fab fa-facebook"></i>
-</a>
+        <a href="nosotros.html">Nosotros</a>
 
-<a href="https://www.instagram.com/dra.lau.gomez_med.estetica/" target="_blank">
-<i class="fab fa-instagram"></i>
-</a>
+        <a href="catalogo.html">Catálogo</a>
 
-<a href="https://wa.me/5217641098535" target="_blank">
-<i class="fab fa-whatsapp"></i>
-</a>
+        <a href="promociones.html">Promociones</a>
 
-</div>
+        <a href="contacto.html">Contacto</a>
+
+        <a href="login.html">Admin</a>
+
+    </nav>
+
+    <div class="redes">
+
+        <a href="https://www.facebook.com/DraLauGomez/photos"
+        target="_blank">
+
+            <i class="fab fa-facebook"></i>
+
+        </a>
+
+        <a href="https://www.instagram.com/dra.lau.gomez_med.estetica/"
+        target="_blank">
+
+            <i class="fab fa-instagram"></i>
+
+        </a>
+
+        <a href="https://wa.me/5217641098535"
+        target="_blank">
+
+            <i class="fab fa-whatsapp"></i>
+
+        </a>
+
+    </div>
 
 </header>
 
-<section class="catalogo">
 
-<h1>CATÁLOGO DE TRATAMIENTOS</h1>
+<main class="catalogo">
 
-<div class="lineas">
-<div></div>
-<div></div>
-<div></div>
-</div>
+    <h1>CATÁLOGO DE TRATAMIENTOS</h1>
 
-<div class="cards">
+    <div class="lineas">
 
-<div class="card">
+        <div></div>
 
-<img src="img/tratamiento1.png" alt="Limpieza Facial">
+        <div></div>
 
-<div class="contenido">
+        <div></div>
 
-<h3>Limpieza Facial</h3>
+    </div>
 
-<p>
-Elimina impurezas, puntos negros y células muertas,
-dejando una piel más limpia, hidratada y saludable.
-</p>
 
-<a href="consulta.html" class="btn-card">
-Solicitar Información
-</a>
+    <p class="descripcion-catalogo">
 
-</div>
+        Conoce algunos de los tratamientos disponibles
+        en nuestro consultorio de medicina estética.
 
-</div>
+    </p>
 
-<div class="card">
 
-<img src="img/tratamiento2.png" alt="Botox">
+    <section class="carrusel">
 
-<div class="contenido">
+        <button
+        class="boton-carrusel anterior"
+        id="anterior">
 
-<h3>Botox</h3>
+            <i class="fas fa-chevron-left"></i>
 
-<p>
-Reduce líneas de expresión y arrugas de forma segura,
-con resultados naturales y duraderos.
-</p>
+        </button>
 
-<a href="consulta.html" class="btn-card">
-Solicitar Información
-</a>
 
-</div>
+        <div class="tratamiento">
 
-</div>
+            <div class="contenedor-imagen">
 
-<div class="card">
+                <img
+                id="imagenTratamiento"
+                src="img/tratamiento1.png"
+                alt="Tratamiento">
 
-<img src="img/tratamiento3.png" alt="Peeling">
+            </div>
 
-<div class="contenido">
 
-<h3>Peeling Facial</h3>
+            <div class="informacion-tratamiento">
 
-<p>
-Renueva la piel eliminando células muertas,
-mejorando textura, manchas y luminosidad.
-</p>
+                <h2 id="nombreTratamiento">
 
-<a href="consulta.html" class="btn-card">
-Solicitar Información
-</a>
+                    Limpieza Facial
 
-</div>
+                </h2>
 
-</div>
 
-</div>
+                <p id="descripcionTratamiento">
 
-</section>
+                    Elimina impurezas, puntos negros y
+                    células muertas, dejando una piel más
+                    limpia, hidratada y saludable.
+
+                </p>
+
+
+                <a
+                id="botonInformacion"
+                class="btn-informacion"
+                href="https://wa.me/5217641098535"
+                target="_blank">
+
+                    <i class="fab fa-whatsapp"></i>
+
+                    Solicitar Información
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <button
+        class="boton-carrusel siguiente"
+        id="siguiente">
+
+            <i class="fas fa-chevron-right"></i>
+
+        </button>
+
+    </section>
+
+
+    <div class="indicadores" id="indicadores"></div>
+
+</main>
+
 
 <footer>
 
-<div>
+    <div>
 
-<h3>CONSULTORIO</h3>
+        <h3>CONSULTORIO</h3>
 
-<p>Dra. Laura Gómez</p>
+        <p>Dra. Laura Gómez</p>
 
-</div>
+    </div>
 
-<div>
 
-<h3>SÍGUENOS</h3>
+    <div>
 
-<div class="footer-redes">
+        <h3>SÍGUENOS</h3>
 
-<a href="https://www.facebook.com/DraLauGomez/photos" target="_blank">
-<i class="fab fa-facebook"></i>
-</a>
+        <div class="footer-redes">
 
-<a href="https://www.instagram.com/dra.lau.gomez_med.estetica/" target="_blank">
-<i class="fab fa-instagram"></i>
-</a>
+            <a
+            href="https://www.facebook.com/DraLauGomez/photos"
+            target="_blank">
 
-<a href="https://wa.me/5217641098535" target="_blank">
-<i class="fab fa-whatsapp"></i>
-</a>
+                <i class="fab fa-facebook"></i>
 
-</div>
+            </a>
 
-</div>
+            <a
+            href="https://www.instagram.com/dra.lau.gomez_med.estetica/"
+            target="_blank">
 
-<div>
+                <i class="fab fa-instagram"></i>
 
-<p>© 2026 Dra. Laura Gómez</p>
+            </a>
 
-</div>
+            <a
+            href="https://wa.me/5217641098535"
+            target="_blank">
+
+                <i class="fab fa-whatsapp"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div>
+
+        <p>© 2026 Dra. Laura Gómez</p>
+
+    </div>
 
 </footer>
 
-<a class="whatsapp"
-href="https://wa.me/5217641098535?text=Hola%20Dra.%20Laura,%20me%20interesa%20un%20tratamiento."
+
+<a
+class="whatsapp"
+href="https://wa.me/5217641098535"
 target="_blank">
 
-<i class="fab fa-whatsapp"></i>
+    <i class="fab fa-whatsapp"></i>
 
 </a>
 
+
+<script src="js/catalogo.js"></script>
+
 </body>
+
 </html>

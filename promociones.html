@@ -3,211 +3,284 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
 
-<title>Promociones</title>
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="css/promociones.css">
+    <title>Promociones</title>
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="css/promociones.css">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 </head>
 
 <body>
 
+
 <header>
 
-<div class="logo">
-<img src="img/Logo DRA.Laura.jpg" alt="Logo">
-</div>
+    <div class="logo">
 
-<nav>
+        <img src="img/Logo DRA.Laura.jpg" alt="Logo Dra. Laura Gómez">
 
-<a href="index.html">Inicio</a>
-<a href="nosotros.html">Nosotros</a>
-<a href="catalogo.html">Catálogo</a>
-<a href="promociones.html">Promociones</a>
-<a href="contacto.html">Contacto</a>
-<a href="consulta.html">Consulta</a>
-<a href="login.html">Admin</a>
+    </div>
 
-</nav>
 
-<div class="redes">
+    <nav>
 
-<a href="https://www.facebook.com/DraLauGomez/photos" target="_blank">
-<i class="fab fa-facebook"></i>
-</a>
+        <a href="index.html">Inicio</a>
 
-<a href="https://www.instagram.com/dra.lau.gomez_med.estetica/" target="_blank">
-<i class="fab fa-instagram"></i>
-</a>
+        <a href="nosotros.html">Nosotros</a>
 
-<a href="https://wa.me/5217641098535" target="_blank">
-<i class="fab fa-whatsapp"></i>
-</a>
+        <a href="catalogo.html">Catálogo</a>
 
-</div>
+        <a href="promociones.html">Promociones</a>
+
+        <a href="contacto.html">Contacto</a>
+
+        <a href="login.html">Admin</a>
+
+    </nav>
+
+
+    <div class="redes">
+
+        <a href="https://www.facebook.com/DraLauGomez/photos"
+        target="_blank">
+
+            <i class="fab fa-facebook"></i>
+
+        </a>
+
+
+        <a href="https://www.instagram.com/dra.lau.gomez_med.estetica/"
+        target="_blank">
+
+            <i class="fab fa-instagram"></i>
+
+        </a>
+
+
+        <a href="https://wa.me/5217641098535"
+        target="_blank">
+
+            <i class="fab fa-whatsapp"></i>
+
+        </a>
+
+    </div>
 
 </header>
 
-<section class="promociones">
 
-<h1>PROMOCIONES ESPECIALES</h1>
+<main class="promociones">
 
-<div class="lineas">
-<div></div>
-<div></div>
-<div></div>
-</div>
+    <h1>PROMOCIONES ESPECIALES</h1>
 
-<p class="subtitulo">
-Aprovecha nuestras promociones por tiempo limitado.
-</p>
 
-<div class="cards">
+    <div class="lineas">
 
-<div class="promo">
+        <div></div>
 
-<span class="etiqueta">20% OFF</span>
+        <div></div>
 
-<img src="img/tratamiento1.png" alt="Limpieza Facial">
+        <div></div>
 
-<h3>Limpieza Facial</h3>
+    </div>
 
-<p>
-Incluye valoración dermatológica y limpieza profunda.
-</p>
 
-<div class="precio">
+    <p class="descripcion-promociones">
 
-<span class="antes">$850</span>
+        Aprovecha nuestras promociones por tiempo limitado.
 
-<span class="ahora">$680</span>
+    </p>
 
-</div>
 
-<a href="https://wa.me/5217641098535?text=Hola%20Dra.%20Laura,%20me%20interesa%20la%20promoción%20de%20Limpieza%20Facial."
-target="_blank">
+    <section class="carrusel-promociones">
 
-Solicitar Promoción
 
-</a>
+        <button
+        class="boton-carrusel anterior"
+        id="promoAnterior">
 
-</div>
+            <i class="fas fa-chevron-left"></i>
 
-<div class="promo">
+        </button>
 
-<span class="etiqueta">2x1</span>
 
-<img src="img/banner.png" alt="Radiofrecuencia">
+        <div class="promocion-principal">
 
-<h3>Radiofrecuencia</h3>
 
-<p>
-Lleva dos sesiones pagando solamente una.
-</p>
+            <div class="contenedor-imagen-promo">
 
-<div class="precio">
+                <img
+                id="imagenPromocion"
+                src="img/tratamiento1.png"
+                alt="Promoción">
 
-<span class="antes">$1,600</span>
+                <span
+                class="etiqueta"
+                id="etiquetaPromocion">
 
-<span class="ahora">$800</span>
+                    20% OFF
 
-</div>
+                </span>
 
-<a href="https://wa.me/5217641098535?text=Hola%20Dra.%20Laura,%20me%20interesa%20la%20promoción%20de%20Radiofrecuencia."
-target="_blank">
+            </div>
 
-Solicitar Promoción
 
-</a>
+            <div class="informacion-promocion">
 
-</div>
 
-<div class="promo">
+                <h2 id="nombrePromocion">
 
-<span class="etiqueta">GRATIS</span>
+                    Limpieza Facial
 
-<img src="img/consultorio.png" alt="Valoración">
+                </h2>
 
-<h3>Consulta Inicial</h3>
 
-<p>
-Valoración completamente gratuita para nuevos pacientes.
-</p>
+                <p id="descripcionPromocion">
 
-<div class="precio">
+                    Incluye valoración dermatológica
+                    y limpieza profunda.
 
-<span class="antes">$500</span>
+                </p>
 
-<span class="ahora">$0</span>
 
-</div>
+                <div class="precio">
 
-<a href="https://wa.me/5217641098535?text=Hola%20Dra.%20Laura,%20me%20interesa%20la%20valoración%20gratuita."
-target="_blank">
+                    <span
+                    class="precio-anterior"
+                    id="precioAnterior">
 
-Agendar Ahora
+                        $850
 
-</a>
+                    </span>
 
-</div>
 
-</div>
+                    <span
+                    class="precio-actual"
+                    id="precioActual">
 
-</section>
+                        $680
+
+                    </span>
+
+                </div>
+
+
+                <a
+                id="botonPromocion"
+                class="btn-promocion"
+                href="#"
+                target="_blank">
+
+                    <i class="fab fa-whatsapp"></i>
+
+                    Solicitar Promoción
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <button
+        class="boton-carrusel siguiente"
+        id="promoSiguiente">
+
+            <i class="fas fa-chevron-right"></i>
+
+        </button>
+
+
+    </section>
+
+
+    <div
+    class="indicadores"
+    id="indicadoresPromociones">
+
+    </div>
+
+
+</main>
+
 
 <footer>
 
-<div>
+    <div>
 
-<h3>CONSULTORIO</h3>
+        <h3>CONSULTORIO</h3>
 
-<p>Dra. Laura Gómez</p>
+        <p>Dra. Laura Gómez</p>
 
-</div>
+    </div>
 
-<div>
 
-<h3>SÍGUENOS</h3>
+    <div>
 
-<div class="footer-redes">
+        <h3>SÍGUENOS</h3>
 
-<a href="https://www.facebook.com/DraLauGomez/photos" target="_blank">
-<i class="fab fa-facebook"></i>
-</a>
 
-<a href="https://www.instagram.com/dra.lau.gomez_med.estetica/" target="_blank">
-<i class="fab fa-instagram"></i>
-</a>
+        <div class="footer-redes">
 
-<a href="https://wa.me/5217641098535" target="_blank">
-<i class="fab fa-whatsapp"></i>
-</a>
+            <a href="https://www.facebook.com/DraLauGomez/photos"
+            target="_blank">
 
-</div>
+                <i class="fab fa-facebook"></i>
 
-</div>
+            </a>
 
-<div>
 
-<p>© 2026 Dra. Laura Gómez</p>
+            <a href="https://www.instagram.com/dra.lau.gomez_med.estetica/"
+            target="_blank">
 
-</div>
+                <i class="fab fa-instagram"></i>
+
+            </a>
+
+
+            <a href="https://wa.me/5217641098535"
+            target="_blank">
+
+                <i class="fab fa-whatsapp"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div>
+
+        <p>© 2026 Dra. Laura Gómez</p>
+
+    </div>
 
 </footer>
 
-<a class="whatsapp"
+
+<a
+class="whatsapp"
 href="https://wa.me/5217641098535"
 target="_blank">
 
-<i class="fab fa-whatsapp"></i>
+    <i class="fab fa-whatsapp"></i>
 
 </a>
 
+
+<script src="js/promociones.js"></script>
+
+
 </body>
+
 </html>
