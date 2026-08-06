@@ -1,128 +1,344 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-<title>Panel Administrador</title>
+    <title>Panel Administrativo</title>
 
-<link rel="stylesheet"
-href="css/admin.css">
+    <link rel="stylesheet" href="css/admin.css">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 </head>
+
 <body>
 
-<div class="sidebar">
+    <!--==================== SIDEBAR ====================-->
 
-<h2>ADMIN</h2>
+    <aside class="sidebar">
 
-<a href="#">
-<i class="fas fa-home"></i>
-Inicio
-</a>
+        <div class="logo-admin">
 
-<a href="#">
-<i class="fas fa-calendar"></i>
-Citas
-</a>
+            <img src="img/Logo DRA.Laura.jpg">
 
-<a href="#">
-<i class="fas fa-user"></i>
-Pacientes
-</a>
+            <h2>Administrador</h2>
 
-<a href="#">
-<i class="fas fa-tags"></i>
-Promociones
-</a>
+        </div>
 
-</div>
+        <nav>
 
-<div class="contenido">
+            <a href="#"
+                onclick="mostrarSeccion('inicio')">
 
-<h1>
+                <i class="fas fa-home"></i>
 
-Panel Administrativo
+                Inicio
 
-</h1>
+            </a>
 
-<div class="cards">
+            <a href="#"
+                onclick="mostrarSeccion('tratamientos')">
 
-<div class="card">
+                <i class="fas fa-list"></i>
 
-<h2>125</h2>
+                Tratamientos
 
-<p>Pacientes</p>
+            </a>
 
-</div>
+            <a href="#"
+                onclick="mostrarSeccion('promociones')">
 
-<div class="card">
+                <i class="fas fa-tags"></i>
 
-<h2>38</h2>
+                Promociones
 
-<p>Citas</p>
+            </a>
 
-</div>
+            <a href="#"
+                onclick="mostrarSeccion('consultas')">
 
-<div class="card">
+                <i class="fas fa-calendar-check"></i>
 
-<h2>15</h2>
+                Consultas
 
-<p>Promociones</p>
+            </a>
 
-</div>
+            <a href="index.html">
 
-</div>
+                <i class="fas fa-globe"></i>
 
-<h2>
+                Ver Sitio Web
 
-Últimas Solicitudes
+            </a>
 
-</h2>
+            <a href="login.html">
 
-<table>
+                <i class="fas fa-right-from-bracket"></i>
 
-<tr>
+                Cerrar Sesión
 
-<th>Nombre</th>
-<th>Tratamiento</th>
-<th>Fecha</th>
+            </a>
 
-</tr>
+        </nav>
 
-<tr>
+    </aside>
 
-<td>María López</td>
-<td>Botox</td>
-<td>10/06/2026</td>
+    <!--==================== CONTENIDO ====================-->
 
-</tr>
+    <main class="contenido">
 
-<tr>
+        <!--==================== DASHBOARD ====================-->
 
-<td>Ana Pérez</td>
-<td>Peeling</td>
-<td>12/06/2026</td>
+        <section id="inicio">
 
-</tr>
+            <h1>
 
-<tr>
+                Panel Administrativo
 
-<td>Carlos Gómez</td>
-<td>Limpieza Facial</td>
-<td>15/06/2026</td>
+            </h1>
 
-</tr>
+            <div class="cards">
 
-</table>
+                <div class="card">
 
-</div>
+                    <h2 id="totalTratamientos">
+
+                        3
+
+                    </h2>
+
+                    <p>
+
+                        Tratamientos
+
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <h2 id="totalPromociones">
+
+                        3
+
+                    </h2>
+
+                    <p>
+
+                        Promociones
+
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <h2 id="totalConsultas">
+
+                        5
+
+                    </h2>
+
+                    <p>
+
+                        Consultas
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!--==================== CRUD TRATAMIENTOS ====================-->
+
+        <section
+            id="tratamientos"
+            class="oculto">
+
+            <div class="encabezado">
+
+                <h1>
+
+                    Gestión de Tratamientos
+
+                </h1>
+
+                <button
+                    class="btn-agregar"
+                    onclick="abrirFormulario()">
+
+                    <i class="fas fa-plus"></i>
+
+                    Nuevo Tratamiento
+
+                </button>
+
+            </div>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Imagen</th>
+
+                        <th>Nombre</th>
+
+                        <th>Descripción</th>
+
+                        <th>Acciones</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="tablaTratamientos">
+
+                </tbody>
+
+            </table>
+
+        </section>
+        
+                <!--==================== CRUD PROMOCIONES ====================-->
+
+        <section
+            id="promociones"
+            class="oculto">
+
+            <div class="encabezado">
+
+                <h1>
+
+                    Gestión de Promociones
+
+                </h1>
+
+                <button
+                    class="btn-agregar">
+
+                    <i class="fas fa-plus"></i>
+
+                    Nueva Promoción
+
+                </button>
+
+            </div>
+
+            <h3>
+
+                Próximamente...
+
+            </h3>
+
+        </section>
+
+        <!--==================== CRUD CONSULTAS ====================-->
+
+        <section
+            id="consultas"
+            class="oculto">
+
+            <div class="encabezado">
+
+                <h1>
+
+                    Gestión de Consultas
+
+                </h1>
+
+            </div>
+
+            <h3>
+
+                Próximamente...
+
+            </h3>
+
+        </section>
+
+    </main>
+
+    <!--==================== MODAL ====================-->
+
+    <div
+        class="modal"
+        id="modal">
+
+        <div class="modal-contenido">
+
+            <h2 id="tituloModal">
+
+                Nuevo Tratamiento
+
+            </h2>
+
+            <input
+                type="text"
+                id="nombre"
+                placeholder="Nombre">
+
+            <textarea
+                id="descripcion"
+                placeholder="Descripción">
+
+</textarea>
+
+            <select id="imagen">
+
+                <option value="img/tratamiento1.png">
+
+                    Limpieza Facial
+
+                </option>
+
+                <option value="img/tratamiento2.png">
+
+                    Botox
+
+                </option>
+
+                <option value="img/tratamiento3.png">
+
+                    Peeling Facial
+
+                </option>
+
+            </select>
+
+            <div class="botones">
+
+                <button
+                    onclick="guardarTratamiento()">
+
+                    Guardar
+
+                </button>
+
+                <button
+                    onclick="cerrarModal()">
+
+                    Cancelar
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="js/admin.js"></script>
 
 </body>
+
 </html>
