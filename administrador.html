@@ -10,7 +10,8 @@
 
     <title>Panel Administrativo</title>
 
-    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet"
+        href="css/admin.css">
 
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -19,7 +20,9 @@
 
 <body>
 
-    <!--==================== SIDEBAR ====================-->
+    <!--========================================
+                SIDEBAR
+    =========================================-->
 
     <aside class="sidebar">
 
@@ -27,7 +30,11 @@
 
             <img src="img/Logo DRA.Laura.jpg">
 
-            <h2>Administrador</h2>
+            <h2>
+
+                Administrador
+
+            </h2>
 
         </div>
 
@@ -45,7 +52,7 @@
             <a href="#"
                 onclick="mostrarSeccion('tratamientos')">
 
-                <i class="fas fa-list"></i>
+                <i class="fas fa-spa"></i>
 
                 Tratamientos
 
@@ -73,7 +80,7 @@
 
                 <i class="fas fa-globe"></i>
 
-                Ver Sitio Web
+                Ver Sitio
 
             </a>
 
@@ -89,11 +96,15 @@
 
     </aside>
 
-    <!--==================== CONTENIDO ====================-->
+    <!--========================================
+            CONTENIDO
+    =========================================-->
 
     <main class="contenido">
 
-        <!--==================== DASHBOARD ====================-->
+        <!--========================================
+                DASHBOARD
+        =========================================-->
 
         <section id="inicio">
 
@@ -109,7 +120,7 @@
 
                     <h2 id="totalTratamientos">
 
-                        3
+                        0
 
                     </h2>
 
@@ -125,7 +136,7 @@
 
                     <h2 id="totalPromociones">
 
-                        3
+                        0
 
                     </h2>
 
@@ -141,7 +152,7 @@
 
                     <h2 id="totalConsultas">
 
-                        5
+                        0
 
                     </h2>
 
@@ -157,7 +168,9 @@
 
         </section>
 
-        <!--==================== CRUD TRATAMIENTOS ====================-->
+        <!--========================================
+                TRATAMIENTOS
+        =========================================-->
 
         <section
             id="tratamientos"
@@ -208,8 +221,10 @@
             </table>
 
         </section>
-        
-                <!--==================== CRUD PROMOCIONES ====================-->
+
+        <!--========================================
+                PROMOCIONES
+        =========================================-->
 
         <section
             id="promociones"
@@ -224,7 +239,8 @@
                 </h1>
 
                 <button
-                    class="btn-agregar">
+                    class="btn-agregar"
+                    onclick="abrirFormularioPromocion()">
 
                     <i class="fas fa-plus"></i>
 
@@ -234,15 +250,37 @@
 
             </div>
 
-            <h3>
+            <table>
 
-                Próximamente...
+                <thead>
 
-            </h3>
+                    <tr>
+
+                        <th>Imagen</th>
+
+                        <th>Nombre</th>
+
+                        <th>Precio</th>
+
+                        <th>Descripción</th>
+
+                        <th>Acciones</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="tablaPromociones">
+
+                </tbody>
+
+            </table>
 
         </section>
 
-        <!--==================== CRUD CONSULTAS ====================-->
+        <!--========================================
+                CONSULTAS
+        =========================================-->
 
         <section
             id="consultas"
@@ -256,19 +294,51 @@
 
                 </h1>
 
+                <button
+                    class="btn-agregar"
+                    onclick="abrirFormularioConsulta()">
+
+                    <i class="fas fa-plus"></i>
+
+                    Nueva Consulta
+
+                </button>
+
             </div>
 
-            <h3>
+            <table>
 
-                Próximamente...
+                <thead>
 
-            </h3>
+                    <tr>
+
+                        <th>Paciente</th>
+
+                        <th>Tratamiento</th>
+
+                        <th>Fecha</th>
+
+                        <th>Hora</th>
+
+                        <th>Acciones</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="tablaConsultas">
+
+                </tbody>
+
+            </table>
 
         </section>
 
     </main>
 
-    <!--==================== MODAL ====================-->
+    <!--========================================
+            MODAL TRATAMIENTOS
+    =========================================-->
 
     <div
         class="modal"
@@ -285,13 +355,11 @@
             <input
                 type="text"
                 id="nombre"
-                placeholder="Nombre">
+                placeholder="Nombre del tratamiento">
 
             <textarea
                 id="descripcion"
-                placeholder="Descripción">
-
-</textarea>
+                placeholder="Descripción"></textarea>
 
             <select id="imagen">
 
@@ -313,19 +381,172 @@
 
                 </option>
 
+                <option value="img/banner.jpg">
+
+                    Imagen Banner
+
+                </option>
+
             </select>
 
             <div class="botones">
 
-                <button
-                    onclick="guardarTratamiento()">
+                <button onclick="guardarTratamiento()">
 
                     Guardar
 
                 </button>
 
-                <button
-                    onclick="cerrarModal()">
+                <button onclick="cerrarModal()">
+
+                    Cancelar
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!--========================================
+            MODAL PROMOCIONES
+    =========================================-->
+
+    <div
+        class="modal"
+        id="modalPromocion">
+
+        <div class="modal-contenido">
+
+            <h2 id="tituloPromocion">
+
+                Nueva Promoción
+
+            </h2>
+
+            <input
+                type="text"
+                id="nombrePromocion"
+                placeholder="Nombre de la promoción">
+
+            <input
+                type="number"
+                id="precioPromocion"
+                placeholder="Precio">
+
+            <textarea
+                id="descripcionPromocion"
+                placeholder="Descripción"></textarea>
+
+            <select id="imagenPromocion">
+
+                <option value="img/tratamiento1.png">
+
+                    Limpieza Facial
+
+                </option>
+
+                <option value="img/tratamiento2.png">
+
+                    Botox
+
+                </option>
+
+                <option value="img/tratamiento3.png">
+
+                    Peeling Facial
+
+                </option>
+
+                <option value="img/banner.jpg">
+
+                    Banner
+
+                </option>
+
+            </select>
+
+            <div class="botones">
+
+                <button onclick="guardarPromocion()">
+
+                    Guardar
+
+                </button>
+
+                <button onclick="cerrarModalPromocion()">
+
+                    Cancelar
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!--========================================
+            MODAL CONSULTAS
+    =========================================-->
+
+    <div
+        class="modal"
+        id="modalConsulta">
+
+        <div class="modal-contenido">
+
+            <h2 id="tituloConsulta">
+
+                Nueva Consulta
+
+            </h2>
+
+            <input
+                type="text"
+                id="paciente"
+                placeholder="Nombre del paciente">
+
+            <select id="tratamientoConsulta">
+
+                <option>
+
+                    Limpieza Facial
+
+                </option>
+
+                <option>
+
+                    Botox
+
+                </option>
+
+                <option>
+
+                    Peeling Facial
+
+                </option>
+
+            </select>
+
+            <input
+                type="date"
+                id="fechaConsulta">
+
+            <input
+                type="time"
+                id="horaConsulta">
+
+            <div class="botones">
+
+                <button onclick="guardarConsulta()">
+
+                    Guardar
+
+                </button>
+
+                <button onclick="cerrarModalConsulta()">
 
                     Cancelar
 
