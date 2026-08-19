@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Prueba API</title>
+
+</head>
+
+<body>
+
+    <h1>Prueba de API de Tratamientos</h1>
+
+    <div id="resultado"></div>
+
+    <script>
+
+        fetch("tratamientos.php")
+
+            .then(respuesta => respuesta.json())
+
+            .then(datos => {
+
+                console.log(datos);
+
+                let resultado =
+                    document.getElementById("resultado");
+
+                datos.forEach(tratamiento => {
+
+                    resultado.innerHTML += `
+
+                        <h2>${tratamiento.nombre}</h2>
+
+                        <p>${tratamiento.descripcion}</p>
+
+                        <p>ID: ${tratamiento.id}</p>
+
+                        <hr>
+
+                    `;
+
+                });
+
+            })
+
+            .catch(error => {
+
+                console.error(error);
+
+                document.getElementById("resultado").innerHTML =
+                    "Error al conectar con la API.";
+
+            });
+
+    </script>
+
+</body>
+
+</html>

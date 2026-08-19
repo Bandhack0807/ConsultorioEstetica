@@ -172,53 +172,77 @@ function cargarTratamientos(){
     let tabla =
     document.getElementById("tablaTratamientos");
 
-    tabla.innerHTML="";
+    tabla.innerHTML = "";
 
-    tratamientos.forEach(function(t,index){
+    fetch("/ConsultorioEstetica/api/tratamientos.php")
+    .then(response => response.json())
+    .then(data => {
 
-        tabla.innerHTML+=`
+        if(data.success){
 
-<tr>
+            tratamientos = data.tratamientos;
 
-<td>
+            tratamientos.forEach(function(t){
 
-<img src="${t.imagen}">
+                tabla.innerHTML += `
 
-</td>
+                <tr>
 
-<td>
+                    <td>
+                        <img src="${t.imagen}">
+                    </td>
 
-${t.nombre}
+                    <td>
+                        ${t.nombre}
+                    </td>
 
-</td>
+                    <td>
+                        ${t.descripcion}
+                    </td>
 
-<td>
+                    <td>
 
-${t.descripcion}
+                        <button
+                        onclick="editarTratamiento(${t.id})">
 
-</td>
+                            <i class="fas fa-edit"></i>
 
-<td>
+                        </button>
 
-<button
-onclick="editarTratamiento(${index})">
+                        <button
+                        onclick="eliminarTratamiento(${t.id})">
 
-<i class="fas fa-edit"></i>
+                            <i class="fas fa-trash"></i>
 
-</button>
+                        </button>
 
-<button
-onclick="eliminarTratamiento(${index})">
+                    </td>
 
-<i class="fas fa-trash"></i>
+                </tr>
 
-</button>
+                `;
 
-</td>
+            });
 
-</tr>
+        }
 
-`;
+        else{
+
+            console.error(
+                "Error al cargar tratamientos:",
+                data.message
+            );
+
+        }
+
+    })
+
+    .catch(error => {
+
+        console.error(
+            "Error de conexión con la API:",
+            error
+        );
 
     });
 
