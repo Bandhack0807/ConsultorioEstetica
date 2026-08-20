@@ -2,14 +2,33 @@
             VARIABLES GLOBALES
 =========================================*/
 
-let tratamientos =
-JSON.parse(localStorage.getItem("tratamientos")) || [];
+/*
+    TRATAMIENTOS
+    -----------------------------------------
+    Ahora los tratamientos se obtienen
+    directamente desde MySQL mediante la API.
+*/
+
+let tratamientos = [];
+
+
+/*
+    PROMOCIONES Y CONSULTAS
+    -----------------------------------------
+    Por ahora continúan utilizando localStorage.
+    Posteriormente las conectaremos con MySQL.
+*/
 
 let promociones =
 JSON.parse(localStorage.getItem("promociones")) || [];
 
 let consultas =
 JSON.parse(localStorage.getItem("consultas")) || [];
+
+
+/*
+    ÍNDICES PARA EDICIÓN
+*/
 
 let indiceEditarTratamiento = -1;
 let indiceEditarPromocion = -1;
@@ -30,8 +49,6 @@ window.onload = function(){
 
     cargarConsultas();
 
-    actualizarDashboard();
-
 };
 
 
@@ -43,11 +60,12 @@ function mostrarSeccion(id){
 
     document
     .querySelectorAll("main section")
-    .forEach(seccion=>{
+    .forEach(seccion => {
 
         seccion.classList.add("oculto");
 
     });
+
 
     document
     .getElementById(id)
@@ -66,9 +84,11 @@ function actualizarDashboard(){
     .getElementById("totalTratamientos")
     .innerHTML = tratamientos.length;
 
+
     document
     .getElementById("totalPromociones")
     .innerHTML = promociones.length;
+
 
     document
     .getElementById("totalConsultas")
@@ -85,140 +105,450 @@ function abrirFormulario(){
 
     indiceEditarTratamiento = -1;
 
+
     document
     .getElementById("tituloModal")
-    .innerHTML="Nuevo Tratamiento";
+    .innerHTML = "Nuevo Tratamiento";
+
 
     document
-    .getElementById("nombre").value="";
+    .getElementById("nombre")
+    .value = "";
+
 
     document
-    .getElementById("descripcion").value="";
+    .getElementById("descripcion")
+    .value = "";
+
 
     document
-    .getElementById("imagen").selectedIndex=0;
+    .getElementById("imagen")
+    .selectedIndex = 0;
+
 
     document
-    .getElementById("modal").style.display="flex";
+    .getElementById("modal")
+    .style.display = "flex";
 
 }
+
 
 function cerrarModal(){
 
     document
     .getElementById("modal")
-    .style.display="none";
+    .style.display = "none";
 
 }
+
+
+/*=========================================
+        GUARDAR TRATAMIENTO
+        POST / PUT → MYSQL
+=========================================*/
+
 function guardarTratamiento(){
 
     let nombre =
-    document.getElementById("nombre").value;
+    document
+    .getElementById("nombre")
+    .value
+    .trim();
+
 
     let descripcion =
-    document.getElementById("descripcion").value;
+    document
+    .getElementById("descripcion")
+    .value
+    .trim();
+
 
     let imagen =
-    document.getElementById("imagen").value;
+    document
+    .getElementById("imagen")
+    .value;
 
-    if(nombre=="" || descripcion==""){
 
-        alert("Complete todos los campos.");
+    /*
+        Validar campos
+    */
+
+    if(
+        nombre === "" ||
+        descripcion === ""
+    ){
+
+        alert(
+            "Complete todos los campos."
+        );
 
         return;
 
     }
 
-    let nuevo={
 
-        nombre:nombre,
+    /*
+        Determinar si estamos:
 
-        descripcion:descripcion,
+        - Creando → POST
+        - Editando → PUT
+    */
 
-        imagen:imagen
+    let metodo;
 
-    };
+    let datos;
 
-    if(indiceEditarTratamiento==-1){
 
-        tratamientos.push(nuevo);
+    if(indiceEditarTratamiento === -1){
+
+        /*
+            NUEVO TRATAMIENTO
+        */
+
+        metodo = "POST";
+
+        datos = {
+
+            nombre: nombre,
+
+            descripcion: descripcion,
+
+            imagen: imagen
+
+        };
 
     }
 
     else{
 
-        tratamientos[indiceEditarTratamiento]=nuevo;
+        /*
+            EDITAR TRATAMIENTO
+        */
+
+        metodo = "PUT";
+
+        datos = {
+
+            id: indiceEditarTratamiento,
+
+            nombre: nombre,
+
+            descripcion: descripcion,
+
+            imagen: imagen
+
+        };
 
     }
 
-    localStorage.setItem(
 
-        "tratamientos",
+    /*
+        Enviar información a la API
+    */
 
-        JSON.stringify(tratamientos)
+    fetch(
+        "/ConsultorioEstetica/api/tratamientos.php",
+        {
 
-    );
+            method: metodo,
 
-    cerrarModal();
+            headers: {
 
-    cargarTratamientos();
+                "Content-Type":
+                "application/json"
 
-    actualizarDashboard();
+            },
+
+            body:
+            JSON.stringify(datos)
+
+        }
+    )
+
+
+    .then(response => {
+
+        if(!response.ok){
+
+            throw new Error(
+                "Error HTTP: "
+                + response.status
+            );
+
+        }
+
+        return response.json();
+
+    })
+
+
+    .then(data => {
+
+        if(data.success){
+
+            /*
+                Mensaje dependiendo
+                de la operación.
+            */
+
+            if(metodo === "POST"){
+
+                alert(
+                    "Tratamiento agregado correctamente."
+                );
+
+            }
+
+            else{
+
+                alert(
+                    "Tratamiento actualizado correctamente."
+                );
+
+            }
+
+
+            /*
+                Cerrar modal
+            */
+
+            cerrarModal();
+
+
+            /*
+                Regresar el índice
+                a su estado inicial.
+            */
+
+            indiceEditarTratamiento = -1;
+
+
+            /*
+                Volver a consultar MySQL
+                para mostrar los datos actualizados.
+            */
+
+            cargarTratamientos();
+
+        }
+
+        else{
+
+            alert(
+
+                "Error: "
+                + data.message
+
+            );
+
+        }
+
+    })
+
+
+    .catch(error => {
+
+        console.error(
+
+            "Error de conexión con la API:",
+
+            error
+
+        );
+
+
+        alert(
+
+            "No se pudo conectar con el servidor."
+
+        );
+
+    });
 
 }
+
+
+/*=========================================
+        CARGAR TRATAMIENTOS
+        GET → MYSQL
+=========================================*/
 
 function cargarTratamientos(){
 
     let tabla =
     document.getElementById("tablaTratamientos");
 
-    tabla.innerHTML = "";
+
+    /*
+        Mostrar mensaje mientras
+        consultamos MySQL.
+    */
+
+    tabla.innerHTML = `
+
+        <tr>
+
+            <td colspan="4">
+
+                Cargando tratamientos...
+
+            </td>
+
+        </tr>
+
+    `;
+
 
     fetch("/ConsultorioEstetica/api/tratamientos.php")
-    .then(response => response.json())
+
+
+    .then(response => {
+
+        if(!response.ok){
+
+            throw new Error(
+                "Error HTTP: " + response.status
+            );
+
+        }
+
+        return response.json();
+
+    })
+
+
     .then(data => {
+
+        console.log(
+            "Respuesta GET tratamientos:",
+            data
+        );
+
 
         if(data.success){
 
-            tratamientos = data.tratamientos;
+            /*
+                Guardamos los tratamientos
+                provenientes directamente
+                de MySQL.
+            */
+
+            tratamientos =
+            data.tratamientos || [];
+
+
+            /*
+                Limpiar tabla.
+            */
+
+            tabla.innerHTML = "";
+
+
+            /*
+                Actualizar contador
+                DESPUÉS de recibir MySQL.
+            */
+
+            actualizarDashboard();
+
+
+            /*
+                Si no existen tratamientos.
+            */
+
+            if(tratamientos.length === 0){
+
+                tabla.innerHTML = `
+
+                    <tr>
+
+                        <td colspan="4">
+
+                            No hay tratamientos registrados.
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+                return;
+
+            }
+
+
+            /*
+                Mostrar tratamientos.
+            */
 
             tratamientos.forEach(function(t){
 
+                /*
+                    MySQL devuelve:
+
+                    img/tratamiento1.png
+
+                    Por eso agregamos:
+
+                    /ConsultorioEstetica/
+                */
+
+                let rutaImagen =
+                "/ConsultorioEstetica/" + t.imagen;
+
+
                 tabla.innerHTML += `
 
-                <tr>
+                    <tr>
 
-                    <td>
-                        <img src="${t.imagen}">
-                    </td>
+                        <td>
 
-                    <td>
-                        ${t.nombre}
-                    </td>
+                            <img
+                                src="${rutaImagen}"
+                                alt="${t.nombre}"
+                            >
 
-                    <td>
-                        ${t.descripcion}
-                    </td>
+                        </td>
 
-                    <td>
 
-                        <button
-                        onclick="editarTratamiento(${t.id})">
+                        <td>
 
-                            <i class="fas fa-edit"></i>
+                            ${t.nombre}
 
-                        </button>
+                        </td>
 
-                        <button
-                        onclick="eliminarTratamiento(${t.id})">
 
-                            <i class="fas fa-trash"></i>
+                        <td>
 
-                        </button>
+                            ${t.descripcion}
 
-                    </td>
+                        </td>
 
-                </tr>
+
+                        <td>
+
+                            <button
+                                onclick="editarTratamiento(${t.id})"
+                                title="Editar"
+                            >
+
+                                <i class="fas fa-edit"></i>
+
+                            </button>
+
+
+                            <button
+                                onclick="eliminarTratamiento(${t.id})"
+                                title="Eliminar"
+                            >
+
+                                <i class="fas fa-trash"></i>
+
+                            </button>
+
+                        </td>
+
+                    </tr>
 
                 `;
 
@@ -226,74 +556,280 @@ function cargarTratamientos(){
 
         }
 
+
         else{
 
+            tratamientos = [];
+
+
+            actualizarDashboard();
+
+
+            tabla.innerHTML = `
+
+                <tr>
+
+                    <td colspan="4">
+
+                        Error al cargar tratamientos.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+
             console.error(
+
                 "Error al cargar tratamientos:",
+
                 data.message
+
             );
 
         }
 
     })
 
+
     .catch(error => {
 
+        tratamientos = [];
+
+
+        actualizarDashboard();
+
+
+        tabla.innerHTML = `
+
+            <tr>
+
+                <td colspan="4">
+
+                    No se pudo conectar con la API.
+
+                </td>
+
+            </tr>
+
+        `;
+
+
         console.error(
+
             "Error de conexión con la API:",
+
             error
+
         );
 
     });
 
 }
 
-function editarTratamiento(index){
 
-    indiceEditarTratamiento=index;
 
-    let t=tratamientos[index];
+/*=========================================
+        EDITAR TRATAMIENTO
+        PUT → MYSQL
+=========================================*/
 
-    document
-    .getElementById("tituloModal")
-    .innerHTML="Editar Tratamiento";
+function editarTratamiento(id){
 
-    document
-    .getElementById("nombre").value=t.nombre;
+    /*
+        Buscamos el tratamiento seleccionado
+        dentro del arreglo obtenido desde MySQL.
+    */
 
-    document
-    .getElementById("descripcion").value=t.descripcion;
+    let tratamiento = tratamientos.find(
+        t => Number(t.id) === Number(id)
+    );
 
-    document
-    .getElementById("imagen").value=t.imagen;
 
-    document
-    .getElementById("modal")
-    .style.display="flex";
+    /*
+        Si no encontramos el tratamiento,
+        mostramos un mensaje y detenemos la función.
+    */
 
-}
+    if(!tratamiento){
 
-function eliminarTratamiento(index){
-
-    if(confirm("¿Eliminar tratamiento?")){
-
-        tratamientos.splice(index,1);
-
-        localStorage.setItem(
-
-            "tratamientos",
-
-            JSON.stringify(tratamientos)
-
+        alert(
+            "No se encontró el tratamiento seleccionado."
         );
 
-        cargarTratamientos();
-
-        actualizarDashboard();
+        return;
 
     }
 
+
+    /*
+        Guardamos el ID que estamos editando.
+    */
+
+    indiceEditarTratamiento = tratamiento.id;
+
+
+    /*
+        Cambiamos el título del modal.
+    */
+
+    document
+    .getElementById("tituloModal")
+    .innerHTML = "Editar Tratamiento";
+
+
+    /*
+        Cargamos los datos actuales.
+    */
+
+    document
+    .getElementById("nombre")
+    .value = tratamiento.nombre;
+
+
+    document
+    .getElementById("descripcion")
+    .value = tratamiento.descripcion;
+
+
+    document
+    .getElementById("imagen")
+    .value = tratamiento.imagen;
+
+
+    /*
+        Mostramos el modal.
+    */
+
+    document
+    .getElementById("modal")
+    .style.display = "flex";
+
 }
+
+/*=========================================
+        ELIMINAR TRATAMIENTO
+        DELETE → MYSQL
+=========================================*/
+
+function eliminarTratamiento(id){
+
+    /*
+        Confirmar antes de eliminar
+    */
+
+    if(
+        !confirm(
+            "¿Está seguro de eliminar este tratamiento?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    /*
+        Enviar solicitud DELETE
+        a la API
+    */
+
+    fetch(
+        "/ConsultorioEstetica/api/tratamientos.php",
+        {
+
+            method: "DELETE",
+
+            headers: {
+
+                "Content-Type":
+                "application/json"
+
+            },
+
+            body:
+            JSON.stringify({
+
+                id: id
+
+            })
+
+        }
+    )
+
+
+    .then(response => {
+
+        if(!response.ok){
+
+            throw new Error(
+
+                "Error HTTP: "
+                + response.status
+
+            );
+
+        }
+
+        return response.json();
+
+    })
+
+
+    .then(data => {
+
+        if(data.success){
+
+            alert(
+                "Tratamiento eliminado correctamente."
+            );
+
+
+            /*
+                Volver a consultar MySQL
+                para actualizar la tabla.
+            */
+
+            cargarTratamientos();
+
+        }
+
+        else{
+
+            alert(
+
+                "Error al eliminar tratamiento: "
+                + data.message
+
+            );
+
+        }
+
+    })
+
+
+    .catch(error => {
+
+        console.error(
+
+            "Error de conexión con la API:",
+
+            error
+
+        );
+
+
+        alert(
+
+            "No se pudo conectar con el servidor."
+
+        );
+
+    });
+
+}
+
 
 /*=========================================
         MODAL PROMOCIONES
@@ -303,27 +839,38 @@ function abrirFormularioPromocion(){
 
     indiceEditarPromocion = -1;
 
+
     document
     .getElementById("tituloPromocion")
     .innerHTML = "Nueva Promoción";
 
-    document
-    .getElementById("nombrePromocion").value = "";
 
     document
-    .getElementById("precioPromocion").value = "";
+    .getElementById("nombrePromocion")
+    .value = "";
+
 
     document
-    .getElementById("descripcionPromocion").value = "";
+    .getElementById("precioPromocion")
+    .value = "";
+
 
     document
-    .getElementById("imagenPromocion").selectedIndex = 0;
+    .getElementById("descripcionPromocion")
+    .value = "";
+
+
+    document
+    .getElementById("imagenPromocion")
+    .selectedIndex = 0;
+
 
     document
     .getElementById("modalPromocion")
     .style.display = "flex";
 
 }
+
 
 function cerrarModalPromocion(){
 
@@ -333,55 +880,82 @@ function cerrarModalPromocion(){
 
 }
 
+
+/*=========================================
+        GUARDAR PROMOCIÓN
+        localStorage
+=========================================*/
+
 function guardarPromocion(){
 
     let nombre =
-    document.getElementById("nombrePromocion").value;
+    document
+    .getElementById("nombrePromocion")
+    .value;
+
 
     let precio =
-    document.getElementById("precioPromocion").value;
+    document
+    .getElementById("precioPromocion")
+    .value;
+
 
     let descripcion =
-    document.getElementById("descripcionPromocion").value;
+    document
+    .getElementById("descripcionPromocion")
+    .value;
+
 
     let imagen =
-    document.getElementById("imagenPromocion").value;
+    document
+    .getElementById("imagenPromocion")
+    .value;
+
 
     if(
-        nombre=="" ||
-        precio=="" ||
-        descripcion==""
+        nombre == "" ||
+        precio == "" ||
+        descripcion == ""
     ){
 
-        alert("Complete todos los campos.");
+        alert(
+            "Complete todos los campos."
+        );
 
         return;
 
     }
 
-    let nuevaPromocion={
 
-        nombre:nombre,
+    let nuevaPromocion = {
 
-        precio:precio,
+        nombre: nombre,
 
-        descripcion:descripcion,
+        precio: precio,
 
-        imagen:imagen
+        descripcion: descripcion,
+
+        imagen: imagen
 
     };
 
-    if(indiceEditarPromocion==-1){
 
-        promociones.push(nuevaPromocion);
+    if(indiceEditarPromocion == -1){
+
+        promociones.push(
+            nuevaPromocion
+        );
 
     }
 
     else{
 
-        promociones[indiceEditarPromocion]=nuevaPromocion;
+        promociones[
+            indiceEditarPromocion
+        ] = nuevaPromocion;
 
     }
+
 
     localStorage.setItem(
 
@@ -391,98 +965,138 @@ function guardarPromocion(){
 
     );
 
+
     cerrarModalPromocion();
 
+
     cargarPromociones();
+
 
     actualizarDashboard();
 
 }
 
+
+/*=========================================
+        CARGAR PROMOCIONES
+        localStorage
+=========================================*/
+
 function cargarPromociones(){
 
     let tabla =
-    document.getElementById("tablaPromociones");
+    document
+    .getElementById("tablaPromociones");
 
-    tabla.innerHTML="";
 
-    promociones.forEach(function(p,index){
+    tabla.innerHTML = "";
 
-        tabla.innerHTML += `
 
-<tr>
+    promociones.forEach(
+        function(p,index){
 
-<td>
+            tabla.innerHTML += `
 
-<img src="${p.imagen}">
+                <tr>
 
-</td>
+                    <td>
 
-<td>
+                        <img
+                            src="${p.imagen}"
+                        >
 
-${p.nombre}
+                    </td>
 
-</td>
 
-<td>
+                    <td>
 
-$${p.precio}
+                        ${p.nombre}
 
-</td>
+                    </td>
 
-<td>
 
-${p.descripcion}
+                    <td>
 
-</td>
+                        $${p.precio}
 
-<td>
+                    </td>
 
-<button
-onclick="editarPromocion(${index})">
 
-<i class="fas fa-edit"></i>
+                    <td>
 
-</button>
+                        ${p.descripcion}
 
-<button
-onclick="eliminarPromocion(${index})">
+                    </td>
 
-<i class="fas fa-trash"></i>
 
-</button>
+                    <td>
 
-</td>
+                        <button
+                            onclick="editarPromocion(${index})"
+                        >
 
-</tr>
+                            <i class="fas fa-edit"></i>
 
-`;
+                        </button>
 
-    });
+
+                        <button
+                            onclick="eliminarPromocion(${index})"
+                        >
+
+                            <i class="fas fa-trash"></i>
+
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
 
 }
+
+
+/*=========================================
+        EDITAR PROMOCIÓN
+=========================================*/
 
 function editarPromocion(index){
 
     indiceEditarPromocion = index;
 
-    let p = promociones[index];
+
+    let p =
+    promociones[index];
+
 
     document
     .getElementById("tituloPromocion")
     .innerHTML = "Editar Promoción";
 
-    document
-    .getElementById("nombrePromocion").value = p.nombre;
 
     document
-    .getElementById("precioPromocion").value = p.precio;
+    .getElementById("nombrePromocion")
+    .value = p.nombre;
+
 
     document
-    .getElementById("descripcionPromocion").value = p.descripcion;
+    .getElementById("precioPromocion")
+    .value = p.precio;
+
 
     document
-    .getElementById("imagenPromocion").value = p.imagen;
+    .getElementById("descripcionPromocion")
+    .value = p.descripcion;
+
+
+    document
+    .getElementById("imagenPromocion")
+    .value = p.imagen;
+
 
     document
     .getElementById("modalPromocion")
@@ -490,11 +1104,21 @@ function editarPromocion(index){
 
 }
 
+
+/*=========================================
+        ELIMINAR PROMOCIÓN
+=========================================*/
+
 function eliminarPromocion(index){
 
-    if(confirm("¿Eliminar esta promoción?")){
+    if(
+        confirm(
+            "¿Eliminar esta promoción?"
+        )
+    ){
 
         promociones.splice(index,1);
+
 
         localStorage.setItem(
 
@@ -504,13 +1128,16 @@ function eliminarPromocion(index){
 
         );
 
+
         cargarPromociones();
+
 
         actualizarDashboard();
 
     }
 
 }
+
 
 /*=========================================
         MODAL CONSULTAS
@@ -520,27 +1147,38 @@ function abrirFormularioConsulta(){
 
     indiceEditarConsulta = -1;
 
+
     document
     .getElementById("tituloConsulta")
     .innerHTML = "Nueva Consulta";
 
-    document
-    .getElementById("paciente").value = "";
 
     document
-    .getElementById("tratamientoConsulta").selectedIndex = 0;
+    .getElementById("paciente")
+    .value = "";
+
 
     document
-    .getElementById("fechaConsulta").value = "";
+    .getElementById("tratamientoConsulta")
+    .selectedIndex = 0;
+
 
     document
-    .getElementById("horaConsulta").value = "";
+    .getElementById("fechaConsulta")
+    .value = "";
+
+
+    document
+    .getElementById("horaConsulta")
+    .value = "";
+
 
     document
     .getElementById("modalConsulta")
     .style.display = "flex";
 
 }
+
 
 function cerrarModalConsulta(){
 
@@ -550,55 +1188,82 @@ function cerrarModalConsulta(){
 
 }
 
+
+/*=========================================
+        GUARDAR CONSULTA
+        localStorage
+=========================================*/
+
 function guardarConsulta(){
 
     let paciente =
-    document.getElementById("paciente").value;
+    document
+    .getElementById("paciente")
+    .value;
+
 
     let tratamiento =
-    document.getElementById("tratamientoConsulta").value;
+    document
+    .getElementById("tratamientoConsulta")
+    .value;
+
 
     let fecha =
-    document.getElementById("fechaConsulta").value;
+    document
+    .getElementById("fechaConsulta")
+    .value;
+
 
     let hora =
-    document.getElementById("horaConsulta").value;
+    document
+    .getElementById("horaConsulta")
+    .value;
+
 
     if(
-        paciente=="" ||
-        fecha=="" ||
-        hora==""
+        paciente == "" ||
+        fecha == "" ||
+        hora == ""
     ){
 
-        alert("Complete todos los campos.");
+        alert(
+            "Complete todos los campos."
+        );
 
         return;
 
     }
 
-    let nuevaConsulta={
 
-        paciente:paciente,
+    let nuevaConsulta = {
 
-        tratamiento:tratamiento,
+        paciente: paciente,
 
-        fecha:fecha,
+        tratamiento: tratamiento,
 
-        hora:hora
+        fecha: fecha,
+
+        hora: hora
 
     };
 
-    if(indiceEditarConsulta==-1){
 
-        consultas.push(nuevaConsulta);
+    if(indiceEditarConsulta == -1){
+
+        consultas.push(
+            nuevaConsulta
+        );
 
     }
 
     else{
 
-        consultas[indiceEditarConsulta]=nuevaConsulta;
+        consultas[
+            indiceEditarConsulta
+        ] = nuevaConsulta;
 
     }
+
 
     localStorage.setItem(
 
@@ -608,98 +1273,136 @@ function guardarConsulta(){
 
     );
 
+
     cerrarModalConsulta();
 
+
     cargarConsultas();
+
 
     actualizarDashboard();
 
 }
 
+
+/*=========================================
+        CARGAR CONSULTAS
+        localStorage
+=========================================*/
+
 function cargarConsultas(){
 
     let tabla =
-    document.getElementById("tablaConsultas");
+    document
+    .getElementById("tablaConsultas");
+
 
     tabla.innerHTML = "";
 
-    consultas.forEach(function(c,index){
 
-        tabla.innerHTML += `
+    consultas.forEach(
+        function(c,index){
 
-<tr>
+            tabla.innerHTML += `
 
-<td>
+                <tr>
 
-${c.paciente}
+                    <td>
 
-</td>
+                        ${c.paciente}
 
-<td>
+                    </td>
 
-${c.tratamiento}
 
-</td>
+                    <td>
 
-<td>
+                        ${c.tratamiento}
 
-${c.fecha}
+                    </td>
 
-</td>
 
-<td>
+                    <td>
 
-${c.hora}
+                        ${c.fecha}
 
-</td>
+                    </td>
 
-<td>
 
-<button
-onclick="editarConsulta(${index})">
+                    <td>
 
-<i class="fas fa-edit"></i>
+                        ${c.hora}
 
-</button>
+                    </td>
 
-<button
-onclick="eliminarConsulta(${index})">
 
-<i class="fas fa-trash"></i>
+                    <td>
 
-</button>
+                        <button
+                            onclick="editarConsulta(${index})"
+                        >
 
-</td>
+                            <i class="fas fa-edit"></i>
 
-</tr>
+                        </button>
 
-`;
 
-    });
+                        <button
+                            onclick="eliminarConsulta(${index})"
+                        >
+
+                            <i class="fas fa-trash"></i>
+
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
 
 }
+
+
+/*=========================================
+        EDITAR CONSULTA
+=========================================*/
 
 function editarConsulta(index){
 
     indiceEditarConsulta = index;
 
-    let c = consultas[index];
+
+    let c =
+    consultas[index];
+
 
     document
     .getElementById("tituloConsulta")
     .innerHTML = "Editar Consulta";
 
-    document
-    .getElementById("paciente").value = c.paciente;
 
     document
-    .getElementById("tratamientoConsulta").value = c.tratamiento;
+    .getElementById("paciente")
+    .value = c.paciente;
+
 
     document
-    .getElementById("fechaConsulta").value = c.fecha;
+    .getElementById("tratamientoConsulta")
+    .value = c.tratamiento;
+
 
     document
-    .getElementById("horaConsulta").value = c.hora;
+    .getElementById("fechaConsulta")
+    .value = c.fecha;
+
+
+    document
+    .getElementById("horaConsulta")
+    .value = c.hora;
+
 
     document
     .getElementById("modalConsulta")
@@ -707,11 +1410,21 @@ function editarConsulta(index){
 
 }
 
+
+/*=========================================
+        ELIMINAR CONSULTA
+=========================================*/
+
 function eliminarConsulta(index){
 
-    if(confirm("¿Eliminar esta consulta?")){
+    if(
+        confirm(
+            "¿Eliminar esta consulta?"
+        )
+    ){
 
         consultas.splice(index,1);
+
 
         localStorage.setItem(
 
@@ -721,7 +1434,9 @@ function eliminarConsulta(index){
 
         );
 
+
         cargarConsultas();
+
 
         actualizarDashboard();
 
