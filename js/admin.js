@@ -19,8 +19,7 @@ let tratamientos = [];
     Posteriormente las conectaremos con MySQL.
 */
 
-let promociones =
-JSON.parse(localStorage.getItem("promociones")) || [];
+let promociones = [];
 
 let consultas =
 JSON.parse(localStorage.getItem("consultas")) || [];
@@ -872,6 +871,10 @@ function abrirFormularioPromocion(){
 }
 
 
+/*=========================================
+        CERRAR MODAL PROMOCIÓN
+=========================================*/
+
 function cerrarModalPromocion(){
 
     document
@@ -883,7 +886,7 @@ function cerrarModalPromocion(){
 
 /*=========================================
         GUARDAR PROMOCIÓN
-        localStorage
+        POST / PUT → MYSQL
 =========================================*/
 
 function guardarPromocion(){
@@ -891,7 +894,8 @@ function guardarPromocion(){
     let nombre =
     document
     .getElementById("nombrePromocion")
-    .value;
+    .value
+    .trim();
 
 
     let precio =
@@ -903,7 +907,8 @@ function guardarPromocion(){
     let descripcion =
     document
     .getElementById("descripcionPromocion")
-    .value;
+    .value
+    .trim();
 
 
     let imagen =
@@ -912,10 +917,14 @@ function guardarPromocion(){
     .value;
 
 
+    /*-----------------------------------------
+            VALIDAR CAMPOS
+    -----------------------------------------*/
+
     if(
-        nombre == "" ||
-        precio == "" ||
-        descripcion == ""
+        nombre === "" ||
+        precio === "" ||
+        descripcion === ""
     ){
 
         alert(
@@ -927,59 +936,203 @@ function guardarPromocion(){
     }
 
 
-    let nuevaPromocion = {
+    /*-----------------------------------------
+            DETERMINAR MÉTODO
+    -----------------------------------------*/
 
-        nombre: nombre,
+    let metodo;
 
-        precio: precio,
-
-        descripcion: descripcion,
-
-        imagen: imagen
-
-    };
+    let datos;
 
 
-    if(indiceEditarPromocion == -1){
+    /*
+        NUEVA PROMOCIÓN
+        ----------------
+        POST → MySQL
+    */
 
-        promociones.push(
-            nuevaPromocion
-        );
+    if(indiceEditarPromocion === -1){
+
+        metodo = "POST";
+
+
+        datos = {
+
+            nombre: nombre,
+
+            precio: Number(precio),
+
+            descripcion: descripcion,
+
+            imagen: imagen
+
+        };
 
     }
+
+
+    /*
+        EDITAR PROMOCIÓN
+        ----------------
+        PUT → MySQL
+    */
 
     else{
 
-        promociones[
-            indiceEditarPromocion
-        ] = nuevaPromocion;
+        metodo = "PUT";
+
+
+        datos = {
+
+            id: indiceEditarPromocion,
+
+            nombre: nombre,
+
+            precio: Number(precio),
+
+            descripcion: descripcion,
+
+            imagen: imagen
+
+        };
 
     }
 
 
-    localStorage.setItem(
-
-        "promociones",
-
-        JSON.stringify(promociones)
-
+    console.log(
+        "Enviando promoción:",
+        datos
     );
 
 
-    cerrarModalPromocion();
+    /*-----------------------------------------
+            ENVIAR A LA API
+    -----------------------------------------*/
+
+    fetch(
+        "/ConsultorioEstetica/api/promociones.php",
+        {
+
+            method: metodo,
+
+            headers: {
+
+                "Content-Type":
+                "application/json"
+
+            },
+
+            body:
+            JSON.stringify(datos)
+
+        }
+    )
 
 
-    cargarPromociones();
+    .then(response => {
+
+        if(!response.ok){
+
+            throw new Error(
+                "Error HTTP: "
+                + response.status
+            );
+
+        }
 
 
-    actualizarDashboard();
+        return response.json();
+
+    })
+
+
+    .then(data => {
+
+        console.log(
+            "Respuesta POST/PUT promociones:",
+            data
+        );
+
+
+        if(data.success){
+
+            if(metodo === "POST"){
+
+                alert(
+                    "Promoción agregada correctamente."
+                );
+
+            }
+
+            else{
+
+                alert(
+                    "Promoción actualizada correctamente."
+                );
+
+            }
+
+
+            /*
+                Cerrar modal
+            */
+
+            cerrarModalPromocion();
+
+
+            /*
+                Reiniciar índice
+            */
+
+            indiceEditarPromocion = -1;
+
+
+            /*
+                Volver a consultar MySQL
+            */
+
+            cargarPromociones();
+
+        }
+
+        else{
+
+            alert(
+
+                "Error: "
+                + data.message
+
+            );
+
+        }
+
+    })
+
+
+    .catch(error => {
+
+        console.error(
+
+            "Error de conexión con la API:",
+            error
+
+        );
+
+
+        alert(
+
+            "No se pudo conectar con el servidor."
+
+        );
+
+    });
 
 }
 
 
 /*=========================================
         CARGAR PROMOCIONES
-        localStorage
+        GET → MYSQL
 =========================================*/
 
 function cargarPromociones(){
@@ -989,64 +1142,201 @@ function cargarPromociones(){
     .getElementById("tablaPromociones");
 
 
-    tabla.innerHTML = "";
+    /*
+        Mensaje de carga
+    */
+
+    tabla.innerHTML = `
+
+        <tr>
+
+            <td colspan="5">
+
+                Cargando promociones...
+
+            </td>
+
+        </tr>
+
+    `;
 
 
-    promociones.forEach(
-        function(p,index){
+    /*
+        CONSULTAR MYSQL
+    */
 
-            tabla.innerHTML += `
+    fetch(
+        "/ConsultorioEstetica/api/promociones.php"
+    )
+
+
+    .then(response => {
+
+        if(!response.ok){
+
+            throw new Error(
+                "Error HTTP: "
+                + response.status
+            );
+
+        }
+
+
+        return response.json();
+
+    })
+
+
+    .then(data => {
+
+        console.log(
+            "Respuesta GET promociones:",
+            data
+        );
+
+
+        if(data.success){
+
+            /*
+                Guardamos directamente
+                los datos de MySQL
+            */
+
+            promociones =
+            data.promociones || [];
+
+
+            /*
+                Limpiar tabla
+            */
+
+            tabla.innerHTML = "";
+
+
+            /*
+                Actualizar contador
+            */
+
+            actualizarDashboard();
+
+
+            /*
+                Si no existen promociones
+            */
+
+            if(promociones.length === 0){
+
+                tabla.innerHTML = `
+
+                    <tr>
+
+                        <td colspan="5">
+
+                            No hay promociones registradas.
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+                return;
+
+            }
+
+
+            /*
+                Mostrar promociones
+            */
+
+            promociones.forEach(function(p){
+
+                let rutaImagen =
+                "/ConsultorioEstetica/"
+                + p.imagen;
+
+
+                tabla.innerHTML += `
+
+                    <tr>
+
+                        <td>
+
+                            <img
+                                src="${rutaImagen}"
+                                alt="${p.nombre}"
+                            >
+
+                        </td>
+
+
+                        <td>
+
+                            ${p.nombre}
+
+                        </td>
+
+
+                        <td>
+
+                            $${p.precio}
+
+                        </td>
+
+
+                        <td>
+
+                            ${p.descripcion}
+
+                        </td>
+
+
+                        <td>
+
+                            <button
+                                onclick="editarPromocion(${p.id})"
+                                title="Editar"
+                            >
+
+                                <i class="fas fa-edit"></i>
+
+                            </button>
+
+
+                            <button
+                                onclick="eliminarPromocion(${p.id})"
+                                title="Eliminar"
+                            >
+
+                                <i class="fas fa-trash"></i>
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            });
+
+        }
+
+        else{
+
+            promociones = [];
+
+
+            actualizarDashboard();
+
+
+            tabla.innerHTML = `
 
                 <tr>
 
-                    <td>
+                    <td colspan="5">
 
-                        <img
-                            src="${p.imagen}"
-                        >
-
-                    </td>
-
-
-                    <td>
-
-                        ${p.nombre}
-
-                    </td>
-
-
-                    <td>
-
-                        $${p.precio}
-
-                    </td>
-
-
-                    <td>
-
-                        ${p.descripcion}
-
-                    </td>
-
-
-                    <td>
-
-                        <button
-                            onclick="editarPromocion(${index})"
-                        >
-
-                            <i class="fas fa-edit"></i>
-
-                        </button>
-
-
-                        <button
-                            onclick="eliminarPromocion(${index})"
-                        >
-
-                            <i class="fas fa-trash"></i>
-
-                        </button>
+                        Error al cargar promociones.
 
                     </td>
 
@@ -1054,49 +1344,136 @@ function cargarPromociones(){
 
             `;
 
+
+            console.error(
+
+                "Error al cargar promociones:",
+
+                data.message
+
+            );
+
         }
-    );
+
+    })
+
+
+    .catch(error => {
+
+        promociones = [];
+
+
+        actualizarDashboard();
+
+
+        tabla.innerHTML = `
+
+            <tr>
+
+                <td colspan="5">
+
+                    No se pudo conectar con la API.
+
+                </td>
+
+            </tr>
+
+        `;
+
+
+        console.error(
+
+            "Error de conexión con la API:",
+            error
+
+        );
+
+    });
 
 }
 
 
 /*=========================================
         EDITAR PROMOCIÓN
+        PUT → MYSQL
 =========================================*/
 
-function editarPromocion(index){
+function editarPromocion(id){
 
-    indiceEditarPromocion = index;
+    /*
+        Buscar promoción por ID
+        dentro del arreglo de MySQL
+    */
+
+    let promocion =
+    promociones.find(
+        p => Number(p.id) === Number(id)
+    );
 
 
-    let p =
-    promociones[index];
+    /*
+        Verificar que exista
+    */
 
+    if(!promocion){
+
+        alert(
+            "No se encontró la promoción seleccionada."
+        );
+
+        return;
+
+    }
+
+
+    /*
+        Guardar ID real de MySQL
+    */
+
+    indiceEditarPromocion =
+    promocion.id;
+
+
+    /*
+        Cambiar título
+    */
 
     document
     .getElementById("tituloPromocion")
     .innerHTML = "Editar Promoción";
 
 
+    /*
+        Cargar datos
+    */
+
     document
     .getElementById("nombrePromocion")
-    .value = p.nombre;
+    .value =
+    promocion.nombre;
 
 
     document
     .getElementById("precioPromocion")
-    .value = p.precio;
+    .value =
+    promocion.precio;
 
 
     document
     .getElementById("descripcionPromocion")
-    .value = p.descripcion;
+    .value =
+    promocion.descripcion;
 
 
     document
     .getElementById("imagenPromocion")
-    .value = p.imagen;
+    .value =
+    promocion.imagen;
 
+
+    /*
+        Mostrar modal
+    */
 
     document
     .getElementById("modalPromocion")
@@ -1107,34 +1484,126 @@ function editarPromocion(index){
 
 /*=========================================
         ELIMINAR PROMOCIÓN
+        DELETE → MYSQL
 =========================================*/
 
-function eliminarPromocion(index){
+function eliminarPromocion(id){
+
+    /*
+        Confirmación
+    */
 
     if(
-        confirm(
-            "¿Eliminar esta promoción?"
+        !confirm(
+            "¿Está seguro de eliminar esta promoción?"
         )
     ){
 
-        promociones.splice(index,1);
+        return;
+
+    }
 
 
-        localStorage.setItem(
+    /*
+        Enviar DELETE
+        a MySQL
+    */
 
-            "promociones",
+    fetch(
+        "/ConsultorioEstetica/api/promociones.php",
+        {
 
-            JSON.stringify(promociones)
+            method: "DELETE",
+
+            headers: {
+
+                "Content-Type":
+                "application/json"
+
+            },
+
+            body:
+            JSON.stringify({
+
+                id: id
+
+            })
+
+        }
+    )
+
+
+    .then(response => {
+
+        if(!response.ok){
+
+            throw new Error(
+                "Error HTTP: "
+                + response.status
+            );
+
+        }
+
+
+        return response.json();
+
+    })
+
+
+    .then(data => {
+
+        console.log(
+            "Respuesta DELETE promociones:",
+            data
+        );
+
+
+        if(data.success){
+
+            alert(
+                "Promoción eliminada correctamente."
+            );
+
+
+            /*
+                Volver a consultar MySQL
+            */
+
+            cargarPromociones();
+
+        }
+
+        else{
+
+            alert(
+
+                "Error al eliminar promoción: "
+                + data.message
+
+            );
+
+        }
+
+    })
+
+
+    .catch(error => {
+
+        console.error(
+
+            "Error de conexión con la API:",
+            error
 
         );
 
 
-        cargarPromociones();
+        alert(
 
+            "No se pudo conectar con el servidor."
 
-        actualizarDashboard();
+        );
 
-    }
+    });
 
 }
 
