@@ -1,17 +1,35 @@
-const imagenInicio = document.getElementById("imagenInicio");
+/*=========================================
+        CARRUSEL INICIO
+        MYSQL → API
+=========================================*/
 
-const botonAnterior = document.getElementById("anteriorInicio");
 
-const botonSiguiente = document.getElementById("siguienteInicio");
+const imagenInicio =
+document.getElementById("imagenInicio");
 
 
-const imagenes = [
+const botonAnterior =
+document.getElementById("anteriorInicio");
 
-    "img/banner.png",
 
-    "img/tratamiento1.png",
+const botonSiguiente =
+document.getElementById("siguienteInicio");
 
-    "img/tratamiento2.png"
+
+
+/*
+    Imágenes del carrusel.
+
+    La primera imagen será siempre
+    el banner principal.
+
+    Las demás se obtendrán desde
+    MySQL.
+*/
+
+let imagenes = [
+
+    "img/banner.png"
 
 ];
 
@@ -19,63 +37,187 @@ const imagenes = [
 let imagenActual = 0;
 
 
-/* ============================= */
-/* CAMBIAR IMAGEN */
-/* ============================= */
+
+/*=========================================
+        CARGAR TRATAMIENTOS
+        GET → MYSQL
+=========================================*/
+
+function cargarImagenes(){
+
+    fetch(
+        "/ConsultorioEstetica/api/tratamientos.php"
+    )
+
+
+    .then(response => {
+
+        if(!response.ok){
+
+            throw new Error(
+                "Error HTTP: "
+                + response.status
+            );
+
+        }
+
+        return response.json();
+
+    })
+
+
+    .then(data => {
+
+        console.log(
+            "Tratamientos obtenidos para Inicio:",
+            data
+        );
+
+
+        if(data.success){
+
+            /*
+                Agregamos las imágenes
+                provenientes de MySQL.
+            */
+
+            const tratamientos =
+            data.tratamientos || [];
+
+
+            tratamientos.forEach(
+                function(tratamiento){
+
+                    if(tratamiento.imagen){
+
+                        imagenes.push(
+                            tratamiento.imagen
+                        );
+
+                    }
+
+                }
+            );
+
+
+            /*
+                Mostrar la primera imagen.
+            */
+
+            imagenInicio.src =
+            "/ConsultorioEstetica/"
+            + imagenes[0];
+
+        }
+
+        else{
+
+            console.error(
+                "No se pudieron cargar los tratamientos:",
+                data.message
+            );
+
+        }
+
+    })
+
+
+    .catch(error => {
+
+        console.error(
+            "Error al obtener tratamientos:",
+            error
+        );
+
+    });
+
+}
+
+
+
+/*=========================================
+        CAMBIAR IMAGEN
+=========================================*/
 
 function cambiarImagen(){
 
-    imagenInicio.classList.add("cambiando");
+    imagenInicio.classList.add(
+        "cambiando"
+    );
 
 
     setTimeout(() => {
 
-        imagenInicio.src = imagenes[imagenActual];
+        imagenInicio.src =
+        "/ConsultorioEstetica/"
+        + imagenes[imagenActual];
 
-        imagenInicio.classList.remove("cambiando");
+
+        imagenInicio.classList.remove(
+            "cambiando"
+        );
 
     }, 400);
 
 }
 
 
-/* ============================= */
-/* SIGUIENTE */
-/* ============================= */
 
-botonSiguiente.addEventListener("click", () => {
+/*=========================================
+        SIGUIENTE
+=========================================*/
 
-    imagenActual++;
+botonSiguiente.addEventListener(
+    "click",
+    () => {
 
-
-    if(imagenActual >= imagenes.length){
-
-        imagenActual = 0;
-
-    }
+        imagenActual++;
 
 
-    cambiarImagen();
+        if(
+            imagenActual >= imagenes.length
+        ){
 
-});
+            imagenActual = 0;
 
-
-/* ============================= */
-/* ANTERIOR */
-/* ============================= */
-
-botonAnterior.addEventListener("click", () => {
-
-    imagenActual--;
+        }
 
 
-    if(imagenActual < 0){
-
-        imagenActual = imagenes.length - 1;
+        cambiarImagen();
 
     }
+);
 
 
-    cambiarImagen();
 
-});
+/*=========================================
+        ANTERIOR
+=========================================*/
+
+botonAnterior.addEventListener(
+    "click",
+    () => {
+
+        imagenActual--;
+
+
+        if(imagenActual < 0){
+
+            imagenActual =
+            imagenes.length - 1;
+
+        }
+
+
+        cambiarImagen();
+
+    }
+);
+
+
+
+/*=========================================
+        INICIAR
+=========================================*/
+
+cargarImagenes();

@@ -1,61 +1,15 @@
-const promociones = [
+/*=========================================
+        VARIABLES GLOBALES
+=========================================*/
 
-    {
-
-        nombre: "Limpieza Facial",
-
-        descripcion:
-        "Incluye valoración dermatológica y limpieza profunda.",
-
-        imagen: "img/tratamiento1.png",
-
-        etiqueta: "20% OFF",
-
-        precioAnterior: "$850",
-
-        precioActual: "$680"
-
-    },
-
-    {
-
-        nombre: "Radiofrecuencia",
-
-        descripcion:
-        "Lleva dos sesiones pagando solamente una.",
-
-        imagen: "img/banner.png",
-
-        etiqueta: "2x1",
-
-        precioAnterior: "$1,600",
-
-        precioActual: "$800"
-
-    },
-
-    {
-
-        nombre: "Consulta Inicial",
-
-        descripcion:
-        "Valoración completamente gratuita para nuevos pacientes.",
-
-        imagen: "img/consultorio.png",
-
-        etiqueta: "GRATIS",
-
-        precioAnterior: "$500",
-
-        precioActual: "$0"
-
-    }
-
-];
-
+let promociones = [];
 
 let indicePromocion = 0;
 
+
+/*=========================================
+        ELEMENTOS DEL HTML
+=========================================*/
 
 const imagenPromocion =
 document.getElementById("imagenPromocion");
@@ -101,87 +55,285 @@ const promocionPrincipal =
 document.querySelector(".promocion-principal");
 
 
+/*=========================================
+        CARGAR PROMOCIONES
+        GET → MYSQL
+=========================================*/
 
-function crearIndicadores(){
+function cargarPromociones(){
 
-    promociones.forEach((promocion, indice) => {
+    /*
+        Consultamos directamente
+        la API de promociones.
+    */
 
-        const indicador =
-        document.createElement("div");
+    fetch("/ConsultorioEstetica/api/promociones.php")
+
+    .then(response => {
+
+        if(!response.ok){
+
+            throw new Error(
+                "Error HTTP: " + response.status
+            );
+
+        }
+
+        return response.json();
+
+    })
+
+    .then(data => {
+
+        console.log(
+            "Promociones obtenidas desde MySQL:",
+            data
+        );
 
 
-        indicador.classList.add("indicador");
+        if(!data.success){
+
+            throw new Error(
+                data.message ||
+                "No se pudieron cargar las promociones."
+            );
+
+        }
 
 
-        indicador.addEventListener("click", () => {
+        /*
+            Guardamos las promociones
+            provenientes de MySQL.
+        */
 
-            indicePromocion = indice;
-
-            mostrarPromocion();
-
-        });
+        promociones =
+        data.promociones || [];
 
 
-        indicadoresPromociones.appendChild(indicador);
+        /*
+            Reiniciamos el carrusel.
+        */
+
+        indicePromocion = 0;
+
+
+        /*
+            Limpiamos los indicadores
+            anteriores.
+        */
+
+        indicadoresPromociones.innerHTML = "";
+
+
+        /*
+            Si no existen promociones.
+        */
+
+        if(promociones.length === 0){
+
+            mostrarSinPromociones();
+
+            return;
+
+        }
+
+
+        /*
+            Crear indicadores.
+        */
+
+        crearIndicadores();
+
+
+        /*
+            Mostrar primera promoción.
+        */
+
+        mostrarPromocion();
+
+    })
+
+    .catch(error => {
+
+        console.error(
+            "Error al cargar promociones:",
+            error
+        );
+
+
+        mostrarErrorPromociones();
 
     });
 
 }
 
 
+/*=========================================
+        CREAR INDICADORES
+=========================================*/
+
+function crearIndicadores(){
+
+    indicadoresPromociones.innerHTML = "";
+
+
+    promociones.forEach(
+        (promocion, indice) => {
+
+            const indicador =
+            document.createElement("div");
+
+
+            indicador.classList.add(
+                "indicador"
+            );
+
+
+            indicador.addEventListener(
+                "click",
+                () => {
+
+                    indicePromocion =
+                    indice;
+
+                    mostrarPromocion();
+
+                }
+            );
+
+
+            indicadoresPromociones.appendChild(
+                indicador
+            );
+
+        }
+    );
+
+}
+
+
+/*=========================================
+        MOSTRAR PROMOCIÓN
+=========================================*/
 
 function mostrarPromocion(){
+
+    /*
+        Verificar que existan promociones.
+    */
+
+    if(
+        promociones.length === 0
+    ){
+
+        return;
+
+    }
+
 
     const promocion =
     promociones[indicePromocion];
 
 
-    promocionPrincipal.classList.remove("animacion");
+    /*
+        Animación del carrusel.
+    */
+
+    promocionPrincipal.classList.remove(
+        "animacion"
+    );
 
 
     void promocionPrincipal.offsetWidth;
 
 
-    promocionPrincipal.classList.add("animacion");
+    promocionPrincipal.classList.add(
+        "animacion"
+    );
 
+
+    /*
+        IMAGEN
+    */
 
     imagenPromocion.src =
+    "/ConsultorioEstetica/" +
     promocion.imagen;
 
+
+    imagenPromocion.alt =
+    promocion.nombre;
+
+
+    /*
+        NOMBRE
+    */
 
     nombrePromocion.textContent =
     promocion.nombre;
 
 
+    /*
+        DESCRIPCIÓN
+    */
+
     descripcionPromocion.textContent =
     promocion.descripcion;
 
 
-    etiquetaPromocion.textContent =
-    promocion.etiqueta;
+    /*
+        ETIQUETA
 
+        Como la base de datos actualmente
+        solamente guarda el precio,
+        utilizamos una etiqueta general.
+    */
+
+    etiquetaPromocion.textContent =
+    "PROMOCIÓN";
+
+
+    /*
+        PRECIO
+
+        Actualmente MySQL guarda
+        solamente un precio.
+    */
 
     precioAnterior.textContent =
-    promocion.precioAnterior;
+    "";
 
 
     precioActual.textContent =
-    promocion.precioActual;
+    "$" +
+    Number(promocion.precio)
+    .toFixed(2);
 
+
+    /*
+        MENSAJE DE WHATSAPP
+    */
 
     const mensaje =
-    `Hola, me interesa la promoción de ${promocion.nombre} (${promocion.etiqueta}). Me gustaría recibir más información.`;
+    `Hola, me interesa la promoción de ${promocion.nombre} con precio de $${Number(promocion.precio).toFixed(2)}. Me gustaría recibir más información.`;
 
 
     botonPromocion.href =
     `https://wa.me/5217641098535?text=${encodeURIComponent(mensaje)}`;
 
 
+    /*
+        Actualizar indicadores.
+    */
+
     actualizarIndicadores();
 
 }
 
 
+/*=========================================
+        ACTUALIZAR INDICADORES
+=========================================*/
 
 function actualizarIndicadores(){
 
@@ -191,56 +343,167 @@ function actualizarIndicadores(){
     );
 
 
-    indicadores.forEach((indicador, indice) => {
+    indicadores.forEach(
+        (indicador, indice) => {
 
-        indicador.classList.toggle(
-            "activo",
-            indice === indicePromocion
-        );
+            indicador.classList.toggle(
 
-    });
+                "activo",
+
+                indice === indicePromocion
+
+            );
+
+        }
+    );
 
 }
 
 
+/*=========================================
+        BOTÓN SIGUIENTE
+=========================================*/
 
-promoSiguiente.addEventListener("click", () => {
+promoSiguiente.addEventListener(
+    "click",
+    () => {
 
-    indicePromocion++;
+        if(promociones.length === 0){
+
+            return;
+
+        }
 
 
-    if(indicePromocion >= promociones.length){
+        indicePromocion++;
 
-        indicePromocion = 0;
+
+        if(
+            indicePromocion >=
+            promociones.length
+        ){
+
+            indicePromocion = 0;
+
+        }
+
+
+        mostrarPromocion();
 
     }
+);
 
 
-    mostrarPromocion();
+/*=========================================
+        BOTÓN ANTERIOR
+=========================================*/
 
-});
+promoAnterior.addEventListener(
+    "click",
+    () => {
+
+        if(promociones.length === 0){
+
+            return;
+
+        }
 
 
-
-promoAnterior.addEventListener("click", () => {
-
-    indicePromocion--;
+        indicePromocion--;
 
 
-    if(indicePromocion < 0){
+        if(indicePromocion < 0){
 
-        indicePromocion =
-        promociones.length - 1;
+            indicePromocion =
+            promociones.length - 1;
+
+        }
+
+
+        mostrarPromocion();
 
     }
+);
 
 
-    mostrarPromocion();
+/*=========================================
+        SIN PROMOCIONES
+=========================================*/
 
-});
+function mostrarSinPromociones(){
+
+    nombrePromocion.textContent =
+    "No hay promociones disponibles";
 
 
+    descripcionPromocion.textContent =
+    "Actualmente no contamos con promociones registradas.";
 
-crearIndicadores();
 
-mostrarPromocion();
+    imagenPromocion.src =
+    "/ConsultorioEstetica/img/tratamiento1.png";
+
+
+    etiquetaPromocion.textContent =
+    "";
+
+
+    precioAnterior.textContent =
+    "";
+
+
+    precioActual.textContent =
+    "";
+
+
+    botonPromocion.style.display =
+    "none";
+
+
+    promoAnterior.style.display =
+    "none";
+
+
+    promoSiguiente.style.display =
+    "none";
+
+}
+
+
+/*=========================================
+        ERROR AL CARGAR
+=========================================*/
+
+function mostrarErrorPromociones(){
+
+    nombrePromocion.textContent =
+    "No se pudieron cargar las promociones";
+
+
+    descripcionPromocion.textContent =
+    "Ocurrió un problema al consultar las promociones. Intenta nuevamente más tarde.";
+
+
+    etiquetaPromocion.textContent =
+    "";
+
+
+    precioAnterior.textContent =
+    "";
+
+
+    precioActual.textContent =
+    "";
+
+
+    botonPromocion.style.display =
+    "none";
+
+}
+
+
+/*=========================================
+        INICIAR SISTEMA
+=========================================*/
+
+cargarPromociones();
