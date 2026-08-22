@@ -182,27 +182,133 @@ target="_blank">
 
 document
 .getElementById("formConsulta")
-.addEventListener("submit",function(e){
+.addEventListener("submit", function(e){
 
-e.preventDefault();
+    e.preventDefault();
 
-let nombre=document.getElementById("nombre").value;
 
-let telefono=document.getElementById("telefono").value;
+    /*=========================================
+            OBTENER DATOS DEL FORMULARIO
+    =========================================*/
 
-let correo=document.getElementById("correo").value;
+    const nombre =
+    document.getElementById("nombre").value.trim();
 
-let tratamiento=document.getElementById("tratamiento").value;
 
-let fecha=document.getElementById("fecha").value;
+    const telefono =
+    document.getElementById("telefono").value.trim();
 
-let hora=document.getElementById("hora").value;
 
-let mensaje=document.getElementById("mensaje").value;
+    const correo =
+    document.getElementById("correo").value.trim();
 
-let texto=
 
-`Hola Dra. Laura Gómez.
+    const tratamiento =
+    document.getElementById("tratamiento").value;
+
+
+    const fecha =
+    document.getElementById("fecha").value;
+
+
+    const hora =
+    document.getElementById("hora").value;
+
+
+    const mensaje =
+    document.getElementById("mensaje").value.trim();
+
+
+    /*=========================================
+            DATOS PARA LA API
+    =========================================*/
+
+    const datos = {
+
+        paciente: nombre,
+
+        telefono: telefono,
+
+        correo: correo,
+
+        tratamiento: tratamiento,
+
+        fecha: fecha,
+
+        hora: hora,
+
+        mensaje: mensaje
+
+    };
+
+
+    /*=========================================
+            ENVIAR A MYSQL
+    =========================================*/
+
+    fetch(
+        "/ConsultorioEstetica/api/consultas.php",
+        {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type":
+                "application/json"
+
+            },
+
+            body:
+            JSON.stringify(datos)
+
+        }
+    )
+
+
+    .then(response => {
+
+        if(!response.ok){
+
+            throw new Error(
+                "Error HTTP: "
+                + response.status
+            );
+
+        }
+
+
+        return response.json();
+
+    })
+
+
+    .then(data => {
+
+        console.log(
+            "Respuesta POST consultas:",
+            data
+        );
+
+
+        if(data.success){
+
+            /*=========================================
+                    CONSULTA GUARDADA
+            =========================================*/
+
+            alert(
+                "Tu solicitud de consulta fue registrada correctamente."
+            );
+
+
+            /*=========================================
+                    MENSAJE DE WHATSAPP
+            =========================================*/
+
+            const texto =
+
+            `Hola Dra. Laura Gómez.
 
 Me gustaría agendar una consulta.
 
@@ -227,13 +333,59 @@ ${hora}
 Mensaje:
 ${mensaje}`;
 
-window.open(
 
-"https://wa.me/5217641098535?text="+encodeURIComponent(texto),
+            window.open(
 
-"_blank"
+                "https://wa.me/5217641098535?text="
+                + encodeURIComponent(texto),
 
-);
+                "_blank"
+
+            );
+
+
+            /*=========================================
+                    LIMPIAR FORMULARIO
+            =========================================*/
+
+            document
+            .getElementById("formConsulta")
+            .reset();
+
+        }
+
+        else{
+
+            alert(
+
+                "No se pudo registrar la consulta: "
+                + data.message
+
+            );
+
+        }
+
+    })
+
+
+    .catch(error => {
+
+        console.error(
+
+            "Error al registrar consulta:",
+
+            error
+
+        );
+
+
+        alert(
+
+            "No se pudo conectar con el servidor."
+
+        );
+
+    });
 
 });
 
