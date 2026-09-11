@@ -1609,7 +1609,12 @@ function eliminarPromocion(id){
 
 
 /*=========================================
-        MODAL CONSULTAS
+        CONSULTAS
+        MYSQL → API → ADMINISTRADOR
+=========================================*/
+
+/*=========================================
+        ABRIR FORMULARIO
 =========================================*/
 
 function abrirFormularioConsulta(){
@@ -1624,6 +1629,16 @@ function abrirFormularioConsulta(){
 
     document
     .getElementById("paciente")
+    .value = "";
+
+
+    document
+    .getElementById("telefonoConsulta")
+    .value = "";
+
+
+    document
+    .getElementById("correoConsulta")
     .value = "";
 
 
@@ -1643,11 +1658,20 @@ function abrirFormularioConsulta(){
 
 
     document
+    .getElementById("mensajeConsulta")
+    .value = "";
+
+
+    document
     .getElementById("modalConsulta")
     .style.display = "flex";
 
 }
 
+
+/*=========================================
+        CERRAR MODAL
+=========================================*/
 
 function cerrarModalConsulta(){
 
@@ -1659,117 +1683,97 @@ function cerrarModalConsulta(){
 
 
 /*=========================================
-        GUARDAR CONSULTA
-        localStorage
+        CARGAR CONSULTAS
+        GET → MYSQL
 =========================================*/
 
-function guardarConsulta(){
+function cargarConsultas(){
 
-    let paciente =
-    document
-    .getElementById("paciente")
-    .value;
+    fetch(
+        "/ConsultorioEstetica/api/consultas.php"
+    )
 
+    .then(response => {
 
-    let tratamiento =
-    document
-    .getElementById("tratamientoConsulta")
-    .value;
+        if(!response.ok){
 
+            throw new Error(
+                "Error HTTP: " +
+                response.status
+            );
 
-    let fecha =
-    document
-    .getElementById("fechaConsulta")
-    .value;
+        }
 
 
-    let hora =
-    document
-    .getElementById("horaConsulta")
-    .value;
+        return response.json();
 
+    })
 
-    if(
-        paciente == "" ||
-        fecha == "" ||
-        hora == ""
-    ){
+    .then(data => {
 
-        alert(
-            "Complete todos los campos."
+        console.log(
+            "Respuesta GET consultas:",
+            data
         );
 
-        return;
 
-    }
+        if(data.success){
 
-
-    let nuevaConsulta = {
-
-        paciente: paciente,
-
-        tratamiento: tratamiento,
-
-        fecha: fecha,
-
-        hora: hora
-
-    };
+            consultas =
+            data.consultas || [];
 
 
-    if(indiceEditarConsulta == -1){
+            mostrarConsultas();
 
-        consultas.push(
-            nuevaConsulta
+
+            actualizarDashboard();
+
+        }
+
+        else{
+
+            console.error(
+
+                "Error al cargar consultas:",
+
+                data.message
+
+            );
+
+        }
+
+    })
+
+    .catch(error => {
+
+        console.error(
+
+            "Error de conexión con la API de consultas:",
+
+            error
+
         );
 
-    }
-
-    else{
-
-        consultas[
-            indiceEditarConsulta
-        ] = nuevaConsulta;
-
-    }
-
-
-    localStorage.setItem(
-
-        "consultas",
-
-        JSON.stringify(consultas)
-
-    );
-
-
-    cerrarModalConsulta();
-
-
-    cargarConsultas();
-
-
-    actualizarDashboard();
+    });
 
 }
 
 
 /*=========================================
-        CARGAR CONSULTAS
-        localStorage
+        MOSTRAR CONSULTAS
 =========================================*/
 
-function cargarConsultas(){
+function mostrarConsultas(){
 
-    let tabla =
-    document
-    .getElementById("tablaConsultas");
+    const tabla =
+    document.getElementById("tablaConsultas");
 
 
     tabla.innerHTML = "";
 
 
     consultas.forEach(
+
         function(c,index){
 
             tabla.innerHTML += `
@@ -1830,13 +1834,254 @@ function cargarConsultas(){
             `;
 
         }
+
     );
 
 }
 
 
 /*=========================================
+        GUARDAR CONSULTA
+        POST → MYSQL
+=========================================*/
+
+function guardarConsulta(){
+
+    const paciente =
+    document
+    .getElementById("paciente")
+    .value
+    .trim();
+
+
+    const telefono =
+    document
+    .getElementById("telefonoConsulta")
+    .value
+    .trim();
+
+
+    const correo =
+    document
+    .getElementById("correoConsulta")
+    .value
+    .trim();
+
+
+    const tratamiento =
+    document
+    .getElementById("tratamientoConsulta")
+    .value;
+
+
+    const fecha =
+    document
+    .getElementById("fechaConsulta")
+    .value;
+
+
+    const hora =
+    document
+    .getElementById("horaConsulta")
+    .value;
+
+
+    const mensaje =
+    document
+    .getElementById("mensajeConsulta")
+    .value
+    .trim();
+
+
+    /*=========================================
+            VALIDAR
+    =========================================*/
+
+    if(
+
+        paciente === "" ||
+
+        telefono === "" ||
+
+        correo === "" ||
+
+        tratamiento === "" ||
+
+        fecha === "" ||
+
+        hora === ""
+
+    ){
+
+        alert(
+            "Complete todos los campos obligatorios."
+        );
+
+        return;
+
+    }
+
+
+    /*=========================================
+            DATOS
+    =========================================*/
+
+    const datos = {
+
+        paciente: paciente,
+
+        telefono: telefono,
+
+        correo: correo,
+
+        tratamiento: tratamiento,
+
+        fecha: fecha,
+
+        hora: hora,
+
+        mensaje: mensaje
+
+    };
+
+
+    /*=========================================
+            DETERMINAR POST O PUT
+    =========================================*/
+
+    const metodo =
+
+    indiceEditarConsulta === -1
+
+        ? "POST"
+
+        : "PUT";
+
+
+    if(indiceEditarConsulta !== -1){
+
+        datos.id =
+        consultas[indiceEditarConsulta].id;
+
+    }
+
+
+    /*=========================================
+            ENVIAR A API
+    =========================================*/
+
+    fetch(
+
+        "/ConsultorioEstetica/api/consultas.php",
+
+        {
+
+            method: metodo,
+
+            headers: {
+
+                "Content-Type":
+                "application/json"
+
+            },
+
+            body:
+            JSON.stringify(datos)
+
+        }
+
+    )
+
+    .then(response => {
+
+        if(!response.ok){
+
+            throw new Error(
+
+                "Error HTTP: "
+                + response.status
+
+            );
+
+        }
+
+
+        return response.json();
+
+    })
+
+    .then(data => {
+
+        console.log(
+
+            "Respuesta " +
+            metodo +
+            " consultas:",
+
+            data
+
+        );
+
+
+        if(data.success){
+
+            alert(
+
+                metodo === "POST"
+
+                    ? "Consulta registrada correctamente."
+
+                    : "Consulta actualizada correctamente."
+
+            );
+
+
+            cerrarModalConsulta();
+
+
+            cargarConsultas();
+
+        }
+
+        else{
+
+            alert(
+
+                "No se pudo guardar la consulta:\n"
+
+                + data.message
+
+            );
+
+        }
+
+    })
+
+    .catch(error => {
+
+        console.error(
+
+            "Error al guardar consulta:",
+
+            error
+
+        );
+
+
+        alert(
+
+            "No se pudo conectar con el servidor."
+
+        );
+
+    });
+
+}
+
+
+/*=========================================
         EDITAR CONSULTA
+        PUT → MYSQL
 =========================================*/
 
 function editarConsulta(index){
@@ -1844,7 +2089,7 @@ function editarConsulta(index){
     indiceEditarConsulta = index;
 
 
-    let c =
+    const c =
     consultas[index];
 
 
@@ -1855,22 +2100,44 @@ function editarConsulta(index){
 
     document
     .getElementById("paciente")
-    .value = c.paciente;
+    .value =
+    c.paciente || "";
+
+
+    document
+    .getElementById("telefonoConsulta")
+    .value =
+    c.telefono || "";
+
+
+    document
+    .getElementById("correoConsulta")
+    .value =
+    c.correo || "";
 
 
     document
     .getElementById("tratamientoConsulta")
-    .value = c.tratamiento;
+    .value =
+    c.tratamiento || "";
 
 
     document
     .getElementById("fechaConsulta")
-    .value = c.fecha;
+    .value =
+    c.fecha || "";
 
 
     document
     .getElementById("horaConsulta")
-    .value = c.hora;
+    .value =
+    c.hora || "";
+
+
+    document
+    .getElementById("mensajeConsulta")
+    .value =
+    c.mensaje || "";
 
 
     document
@@ -1882,33 +2149,134 @@ function editarConsulta(index){
 
 /*=========================================
         ELIMINAR CONSULTA
+        DELETE → MYSQL
 =========================================*/
 
 function eliminarConsulta(index){
 
+    const consulta =
+    consultas[index];
+
+
     if(
-        confirm(
-            "¿Eliminar esta consulta?"
+
+        !confirm(
+
+            "¿Eliminar esta consulta?\n\n"
+
+            + "Paciente: "
+            + consulta.paciente
+
+            + "\nTratamiento: "
+            + consulta.tratamiento
+
         )
+
     ){
 
-        consultas.splice(index,1);
+        return;
+
+    }
 
 
-        localStorage.setItem(
+    fetch(
 
-            "consultas",
+        "/ConsultorioEstetica/api/consultas.php",
 
-            JSON.stringify(consultas)
+        {
+
+            method: "DELETE",
+
+            headers: {
+
+                "Content-Type":
+                "application/json"
+
+            },
+
+            body: JSON.stringify({
+
+                id: consulta.id
+
+            })
+
+        }
+
+    )
+
+    .then(response => {
+
+        if(!response.ok){
+
+            throw new Error(
+
+                "Error HTTP: "
+                + response.status
+
+            );
+
+        }
+
+
+        return response.json();
+
+    })
+
+    .then(data => {
+
+        console.log(
+
+            "Respuesta DELETE consultas:",
+
+            data
 
         );
 
 
-        cargarConsultas();
+        if(data.success){
+
+            alert(
+
+                "Consulta eliminada correctamente."
+
+            );
 
 
-        actualizarDashboard();
+            cargarConsultas();
 
-    }
+        }
+
+        else{
+
+            alert(
+
+                "No se pudo eliminar la consulta:\n"
+
+                + data.message
+
+            );
+
+        }
+
+    })
+
+    .catch(error => {
+
+        console.error(
+
+            "Error al eliminar consulta:",
+
+            error
+
+        );
+
+
+        alert(
+
+            "No se pudo conectar con el servidor."
+
+        );
+
+    });
 
 }
